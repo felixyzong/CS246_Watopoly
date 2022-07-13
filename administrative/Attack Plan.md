@@ -32,24 +32,77 @@ class Player : public Subject<PlayerInfo> {
 ### Building Class
 
 ```c++
+enum class BuildingType { Academic, Residence, Gyms, CollectOSAP, DCTimsLine, GoToTims, GooseNesting, Tuition, CoopFee, SLC, NeedlesHall}; 
+enum class AcademicType { AL, ML, ECH, PAS, HH, RCH, DWE, CPH, LHI, BMH, OPT, EV1, EV2, EV3, PHYS, B1, B2, EIT, ESC, C2, MC, DC };
+enum class ResidenceType { MKV，UWP, V1, REV };
+enum class GymsType { PAC, CIF };
+
+// BuildingInfo are received by board for display
 struct BuildingInfo {
-  
+  BuildingType bt;
+  AcademicType at;
+  ResidenceType rt;
+  GymsType gt;
+  Player * owner;
+  int improvement;
 };
 ```
 
-
-
 ```c++
 class Building : public Subject<BuildingInfo> {
-   // abstract building class
+  BuildingType bt;
  public:
-  virtual building() = 0;
-  // ...
-  virtual ~building() = 0;
+  virtual Buidling(BuidlingType bt);
+  virtual int tuition() const = 0;
+  virtual BuildingType getBuidlingType() const { return bt; }
+  virtual ~building() = default;
+  virtual InfoType getInfo() const = 0;
 };
 
 class AcademicBuilding : public Building {
-  // ...
+  AcademicType at;
+  Player* owner;
+  int improvement;
+ public:
+  AcademicBuilding(AcademicType at);
+  bool AddImprovement(); // return false if already 5 improvements
+  virtual int tuition() const override;
+  Player *getOwner();
+  virtual BuildingInfo getInfo() const override;
+  ~AcademicBuidling(); 
+};
+
+class ResidenceBuilding : public Building {
+  ResidenceType rt;
+  Player* owner;
+ public:
+  ResidenceBuilding(ResidenceType at);
+  virtual int tuition() const override;
+  Player *getOwner();
+  virtual BuildingInfo getInfo() const override;
+  ~ResidenceBuidling(); 
+};
+
+class GymsBuilding : public Building {
+  GymsType gt;
+  Player* owner;
+ public:
+  GymsBuilding(GymsType gt);
+  virtual int tuition() const override;
+  Player* getOwner();
+  virtual BuildingInfo getInfo() const override;
+  ~GymsBuilding();
+};
+
+class NonPropertyBuilding : public Building {
+  friend class player;
+  friend class Board;
+ public:
+  NonPropertyBuilding(BuidlingType bt);
+  int MoveTo(); // return an index that player should be moved to based on the rule of that non-property buidling
+  virtual int tuition() const override;
+  virtual BuildingInfo getInfo() const override;
+  ~NonPropertyBuilding();
 };
 ```
 
@@ -67,7 +120,7 @@ class Board : public Observer<BuildingInfo>, public Observer<PlayerInfo> {
 ### Observer Class
 
 ```c++
-// A copy of observer class provided for a4q3
+// A revised version based on observer class provided for a4q3
 
 template <typename InfoType> class Subject;
 
@@ -82,7 +135,7 @@ class Observer {
 ### Subject Class
 
 ```c++
-// A copy of subject class provided for a4q3
+// A revised version based on subject class provided for a4q3
 
 template <typename InfoType> class Observer;
 
