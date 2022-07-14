@@ -6,28 +6,38 @@ Group: f2zong, q473wang, t345chen
 
 ## Class Breakdown
 
-Board is an observer to all players and all buildings.
-
-### Controller
+### TextDisplay Class
 
 ```c++
+class TextDisplay : public Observer<BuildingInfo>, public Observer<PlayerInfo> {
+  std::vector<std::vector<char>> text;
+ public:
+  TextDisplay(Board *b, std::vector<player*> players);
+  virtual void notify(Subject<BuildingInfo> &whoFrom) override;
+  virtual void notify(Subject<PlayerInfo> &whoFrom) override;
+  friend std::ostream &operator<<(std::ostream &out, constTextDisplay* td);
+  ~TextDisplay();
+};
+```
 
+### Controller Class
 
-
+```c++
 /*
 This class will be responsible for interpretating input as instructions. 
 It will keep track of the status of each player, players assigned, etc. 
 */
 class Controller {
-Board *b;
-std::vector<Player *> players;
-std::vector<char> availablePlayers;
-Player *findPlayer(char c);
-Player *curPlayer;
-void switchPlayer();
-public:
-void parseAction(std::string action);
-void loadGame(std::string file);
+  TextDisplay *td;
+	Board *b;
+	std::vector<Player *> players;
+	std::vector<char> availablePlayers;
+	Player *findPlayer(char c);
+	Player *curPlayer;	
+	void switchPlayer();
+ public:
+	void parseAction(std::string action);
+	void loadGame(std::string file);
 }
 ```
 
@@ -35,14 +45,12 @@ void loadGame(std::string file);
 
 ```c++
 struct PlayerInfo {
-  
+  char name;
+  int pos;
 };
 ```
 
 ```c++
-
-
-
 class Player : public Subject<PlayerInfo> {
   long money;
   std::vector<Building *> property;
@@ -69,6 +77,7 @@ class Player : public Subject<PlayerInfo> {
   void setPos(int pos); // differentiates "sent" to a place and "move" to a place
   char getName();
   bool isRolled();
+  virtual PlayerInfo getInfo() const override;
 };
 
 
@@ -79,6 +88,7 @@ class Player : public Subject<PlayerInfo> {
 
 ```c++
 enum class BuildingType { Academic, Residence, Gyms, CollectOSAP, DCTimsLine, GoToTims, GooseNesting, Tuition, CoopFee, SLC, NeedlesHall}; 
+enum class MonopolyBlock { Arts1, Arts2, Eng, Health, Env, Sci1, Sci2, Math };
 enum class AcademicType { AL, ML, ECH, PAS, HH, RCH, DWE, CPH, LHI, BMH, OPT, EV1, EV2, EV3, PHYS, B1, B2, EIT, ESC, C2, MC, DC };
 enum class ResidenceType { MKV，UWP, V1, REV };
 enum class GymsType { PAC, CIF };
@@ -87,6 +97,7 @@ enum class GymsType { PAC, CIF };
 struct BuildingInfo {
   BuildingType bt;
   AcademicType at;
+  MonopolyBlock mb;
   ResidenceType rt;
   GymsType gt;
   Player * owner;
@@ -107,8 +118,10 @@ class Building : public Subject<BuildingInfo> {
 
 class AcademicBuilding : public Building {
   AcademicType at;
+  MonopolyBlock mb;
   Player* owner;
   int improvement;
+  bool mortgage;
  public:
   AcademicBuilding(AcademicType at);
   bool AddImprovement(); // return false if already 5 improvements
@@ -141,8 +154,6 @@ class GymsBuilding : public Building {
 };
 
 class NonPropertyBuilding : public Building {
-  friend class player;
-  friend class Board;
  public:
   NonPropertyBuilding(BuidlingType bt);
   int MoveTo(); // return an index that player should be moved to based on the rule of that non-property buidling
@@ -155,17 +166,12 @@ class NonPropertyBuilding : public Building {
 ### Board Class
 
 ```c++
-
-
-class Board : public Observer<BuildingInfo>, public Observer<PlayerInfo> {
-  // ...
+class Board {
   std::vector<Building *> buildings;
  public:
   Building * getBuilding(int pos);
   void init();
   int searchBuilding(Building *);
-  // ...
-  
 };
 ```
 
@@ -211,3 +217,17 @@ void Subject<InfoType>::notifyObservers() {
 }
 
 ```
+
+### Answer to questions
+
+**Question:** After reading this subsection, would the Observer Pattern be a good pattern to use when implementing a game board? Why or why not?
+
+**Answer:** Yes, similar to assignment 4 question 3, an observer pattern can notify the board class only when there are changes inside building or player classes that will result changes in text displayed.
+
+**Question:** Suppose that we wanted to model SLC and Needles Hall more closely to Chance and Community Chest cards. Is there a suitable design pattern you could use? How would you use it?
+
+**Answer:** I don't find a proper design pattern that are suitable for model SLC and Needles Hall. In my opinion, these two buildings can be implemented by placing a random number generator inside, by which the number generated each time will determine the behaviour of players on that building.
+
+**Question:** Is the Decorator Pattern a good pattern to use when implementing Improvements? Why or why not?
+
+**Answer:** Decorator Pattern might not be a good pattern to use for improvement. Since each improvement level will return different addition on tuition which is also differ from building to building, and there is a limit of 5 improvement maximum, if we implement it as a decorator, we need to implement too many decorators or too complicated logic inside decorators. Instead, an integer that saves the number of improvements of a building will be good enough to represent and easy to implement the tuition function.
