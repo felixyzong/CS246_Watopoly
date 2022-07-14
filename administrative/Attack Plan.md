@@ -8,6 +8,29 @@ Group: f2zong, q473wang, t345chen
 
 Board is an observer to all players and all buildings.
 
+### Controller
+
+```c++
+
+
+
+/*
+This class will be responsible for interpretating input as instructions. 
+It will keep track of the status of each player, players assigned, etc. 
+*/
+class Controller {
+Board *b;
+std::vector<Player *> players;
+std::vector<char> availablePlayers;
+Player *findPlayer(char c);
+Player *curPlayer;
+void switchPlayer();
+public:
+void parseAction(std::string action);
+void loadGame(std::string file);
+}
+```
+
 ### Player Class
 
 ```c++
@@ -17,12 +40,35 @@ struct PlayerInfo {
 ```
 
 ```c++
+
+
+
 class Player : public Subject<PlayerInfo> {
   long money;
-  std::vector<Building> property;
+  std::vector<Building *> property;
   // ...
+  int cup; // The numebr of Roll Up the Rim Cup
+  int TimLineTurn; 
+  bool isInTimLine;
+  int pos;
+  char name;
+  bool rolled;
  public:
   // ...
+  Player(long money, char name);
+  void addFund(int num); // To increase the money for a certain number
+  int getTotalWorth();   // get the total wealth
+  int rollDice();        // get a random number
+  void move(int num);    // To move on the board for a certain number
+  void gainCup();        // Increase the cup by 1
+  int getTimTurn();      // Get the number of turn the player is stuck at time line
+  int incTimTurn();      // Increase the tim line turn
+  bool isInTim();
+  void buyProperty(Building *b);
+  int getPos();
+  void setPos(int pos); // differentiates "sent" to a place and "move" to a place
+  char getName();
+  bool isRolled();
 };
 
 
@@ -109,11 +155,17 @@ class NonPropertyBuilding : public Building {
 ### Board Class
 
 ```c++
+
+
 class Board : public Observer<BuildingInfo>, public Observer<PlayerInfo> {
   // ...
+  std::vector<Building *> buildings;
  public:
-  init(Player p);
+  Building * getBuilding(int pos);
+  void init();
+  int searchBuilding(Building *);
   // ...
+  
 };
 ```
 
@@ -159,6 +211,3 @@ void Subject<InfoType>::notifyObservers() {
 }
 
 ```
-
-
-
