@@ -33,7 +33,7 @@ class Controller {
 	std::vector<Player *> players;
 	std::vector<char> availablePlayers;
 	Player *findPlayer(char c);
-	Player *curPlayer;	
+	Player *curPlayer;
 	void switchPlayer();
  public:
 	void parseAction(std::string action);
@@ -79,27 +79,18 @@ class Player : public Subject<PlayerInfo> {
   bool isRolled();
   virtual PlayerInfo getInfo() const override;
 };
-
-
-
 ```
 
 ### Building Class
 
 ```c++
-enum class BuildingType { Academic, Residence, Gyms, CollectOSAP, DCTimsLine, GoToTims, GooseNesting, Tuition, CoopFee, SLC, NeedlesHall}; 
+enum class BuildingType { Academic, Residence, Gyms, Nonproperty };
+enum class BuildingName { AL, ML, ECH, PAS, HH, RCH, DWE, CPH, LHI, BMH, OPT, EV1, EV2, EV3, PHYS, B1, B2, EIT, ESC, C2, MC, DC, MKV，UWP, V1, REV, PAC, CIF, CollectOSAP, DCTimsLine, GoToTims, GooseNesting, Tuition, CoopFee, SLC, NeedlesHall}; 
 enum class MonopolyBlock { Arts1, Arts2, Eng, Health, Env, Sci1, Sci2, Math };
-enum class AcademicType { AL, ML, ECH, PAS, HH, RCH, DWE, CPH, LHI, BMH, OPT, EV1, EV2, EV3, PHYS, B1, B2, EIT, ESC, C2, MC, DC };
-enum class ResidenceType { MKV，UWP, V1, REV };
-enum class GymsType { PAC, CIF };
 
-// BuildingInfo are received by board for display
+// BuildingInfo are received by textdisplay for display
 struct BuildingInfo {
-  BuildingType bt;
-  AcademicType at;
-  MonopolyBlock mb;
-  ResidenceType rt;
-  GymsType gt;
+  BuildingName bn;
   Player * owner;
   int improvement;
 };
@@ -108,8 +99,10 @@ struct BuildingInfo {
 ```c++
 class Building : public Subject<BuildingInfo> {
   BuildingType bt;
+  BuildingName bn;
  public:
-  virtual Buidling(BuidlingType bt);
+  virtual Buidling(BuildingType bt, BuidlingName bn);
+  virtual BuildingName GetBuildingName() const { return bn; }
   virtual int tuition() const = 0;
   virtual BuildingType getBuidlingType() const { return bt; }
   virtual ~building() = default;
@@ -117,13 +110,12 @@ class Building : public Subject<BuildingInfo> {
 };
 
 class AcademicBuilding : public Building {
-  AcademicType at;
   MonopolyBlock mb;
   Player* owner;
   int improvement;
   bool mortgage;
  public:
-  AcademicBuilding(AcademicType at);
+  AcademicBuilding(BuildingName bn);
   bool AddImprovement(); // return false if already 5 improvements
   virtual int tuition() const override;
   Player *getOwner();
@@ -132,10 +124,9 @@ class AcademicBuilding : public Building {
 };
 
 class ResidenceBuilding : public Building {
-  ResidenceType rt;
   Player* owner;
  public:
-  ResidenceBuilding(ResidenceType at);
+  ResidenceBuilding(BuildingName bn);
   virtual int tuition() const override;
   Player *getOwner();
   virtual BuildingInfo getInfo() const override;
@@ -143,10 +134,9 @@ class ResidenceBuilding : public Building {
 };
 
 class GymsBuilding : public Building {
-  GymsType gt;
   Player* owner;
  public:
-  GymsBuilding(GymsType gt);
+  GymsBuilding(BuildingName bn);
   virtual int tuition() const override;
   Player* getOwner();
   virtual BuildingInfo getInfo() const override;
@@ -155,7 +145,7 @@ class GymsBuilding : public Building {
 
 class NonPropertyBuilding : public Building {
  public:
-  NonPropertyBuilding(BuidlingType bt);
+  NonPropertyBuilding(BuildingName bn);
   int MoveTo(); // return an index that player should be moved to based on the rule of that non-property buidling
   virtual int tuition() const override;
   virtual BuildingInfo getInfo() const override;
