@@ -19,12 +19,26 @@ class TextDisplay : public Observer<BuildingInfo>, public Observer<PlayerInfo> {
   ~TextDisplay();
 };
 ```
+### Monopoly Block
+```c++
+// The header file to provide collection of monopoly blocks
+std::vector<Building *> Arts1;
+std::vector<Building *> Arts2;
+std::vector<Building *> Eng;
+std::vector<Building *> Health;
+std::vector<Building *> Env;
+std::vector<Building *> Sci1;
+std::vector<Building *> Sci2;
+std::vector<Building *> Math;
+```
+
 
 ### Controller Class
 
 ```c++
+
 /*
-This class will be responsible for interpretating input as instructions. 
+This class will be responsible for interpreting input as instructions. 
 It will keep track of the status of each player, players assigned, etc. 
 */
 class Controller {
@@ -33,8 +47,12 @@ class Controller {
 	std::vector<Player *> players;
 	std::vector<char> availablePlayers;
 	Player *findPlayer(char c);
-	Player *curPlayer;	
+	Player *curPlayer;
 	void switchPlayer();
+ 	void dropOut(Player *);
+	bool checkBankRuptcy(Player *);
+	bool isTest;
+	void auction(Building *b); // begin an auction on building b, input for a single player will be like [num]/W. "W" means withdraw
  public:
 	void parseAction(std::string action);
 	void loadGame(std::string file);
@@ -51,7 +69,7 @@ struct PlayerInfo {
 ```
 
 ```c++
-class Player : public Subject<PlayerInfo> {
+class Player {
   long money;
   std::vector<Building *> property;
   // ...
@@ -77,7 +95,9 @@ class Player : public Subject<PlayerInfo> {
   void setPos(int pos); // differentiates "sent" to a place and "move" to a place
   char getName();
   bool isRolled();
-  virtual PlayerInfo getInfo() const override;
+  void addProperty(Building *b);
+  void mortgage();
+  void unMortgage();
 };
 
 
