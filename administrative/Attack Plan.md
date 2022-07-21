@@ -55,6 +55,7 @@ class Controller {
 	void auction(Building *b); // begin an auction on building b, input for a single player will be like [num]/W. "W" means withdraw
  public:
 	void parseAction(std::string action);
+  void saveGame();
 	void loadGame(std::string file);
 }
 ```
@@ -140,27 +141,38 @@ class AcademicBuilding : public Building {
   virtual int tuition() const override;
   Player *getOwner();
   virtual BuildingInfo getInfo() const override;
-  ~AcademicBuidling(); 
+  ~AcademicBuidling();
+  bool getMortgage();
+  int mortgage();
+  int unmortgage();
 };
 
 class ResidenceBuilding : public Building {
   Player* owner;
+  bool mortgage;
  public:
   ResidenceBuilding(BuildingName bn);
   virtual int tuition() const override;
   Player *getOwner();
   virtual BuildingInfo getInfo() const override;
-  ~ResidenceBuidling(); 
+  ~ResidenceBuidling();
+  bool getMortgage();
+  int mortgage();
+  int unmortgage();
 };
 
 class GymsBuilding : public Building {
   Player* owner;
+  bool mortgage;
  public:
   GymsBuilding(BuildingName bn);
   virtual int tuition() const override;
   Player* getOwner();
   virtual BuildingInfo getInfo() const override;
   ~GymsBuilding();
+  bool getMortgage();
+  int mortgage();
+  int unmortgage();
 };
 
 class NonPropertyBuilding : public Building {

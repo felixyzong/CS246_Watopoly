@@ -1,0 +1,33 @@
+#ifndef CONTROLLER_H
+#define CONTROLLER_H
+#include <vector>
+#include <iostream>
+#include <fstream>
+#include "textdisplay.h"
+#include "building.h"
+#include "board.h"
+
+/*
+This class will be responsible for interpreting input as instructions. 
+It will keep track of the status of each player, players assigned, etc. 
+*/
+class Controller {
+  TextDisplay *td;
+	Board *b;
+	std::vector<Player *> players;
+	std::vector<char> availablePlayers;
+	Player *findPlayer(char c);
+	Player *curPlayer;
+	void switchPlayer();
+ 	void dropOut(Player *);
+	bool checkBankRuptcy(Player *);
+	bool isTest;
+	void auction(Building *b); // begin an auction on building b, input for a single player will be like [num]/W. "W" means withdraw
+ public:
+	void parseAction(std::string action);
+  void saveGame();
+	void loadGame(std::string file);
+}
+
+
+#endif
