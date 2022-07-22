@@ -3,6 +3,11 @@
 
 
 #include <vector>
+#include "building.h"
+#include "academicbuilding.h"
+#include "residencebuilding.h"
+#include "gymsbuilding.h"
+#include "nonpropertybuilding.h"
 
 class Player {
   long money;

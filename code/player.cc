@@ -28,7 +28,7 @@ int Player::rollDice(unsigned seed) {
 
 void Player::move(int num) {
   pos += num;
-  pos %= 39;
+  pos %= 40;
 }
 
 void Player::gainCup() {
