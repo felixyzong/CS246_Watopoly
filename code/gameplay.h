@@ -26,6 +26,7 @@ class Gameplay {
 	std::vector<char> availablePlayers;
 	Player *curPlayer;
   Building *curBuilding;
+  unsigned seed = chrono::system_clock::now().time_since_epoch().count();
   bool isTest;
   int curTuition;
   int totalRimCup = 0;
@@ -48,10 +49,11 @@ class Gameplay {
   void assets();
   void all();
  public:
+  void setseed(unsigned seed);
   Gameplay(bool test);
   void play();
   void saveGame();
-	void loadGame(std::string file);
+  void loadGame(std::string file);
   ~Gameplay();
 }
 

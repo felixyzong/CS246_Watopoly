@@ -3,6 +3,7 @@
 //
 
 #include "player.h"
+#include "info.h"
 #include <random>
 #include <iostream>
 #include <algorithm>
@@ -23,9 +24,7 @@ int Player::getTotalWorth() {
 }
 
 int Player::rollDice(unsigned seed) {
-  default_random_engine rng{seed};
-  uniform_int_distribution<> distrib(1, 100);
-  return distrib(rng);
+  return randomGen(1, 6, seed);
 }
 
 void Player::move(int num) {
@@ -93,7 +92,7 @@ void Player::mortgage(Building *b) {
     cout << "You must sold improvements to mortgage this building!" << endl;
     return;
   }
-  b->setMortgage();
+  b->mortgage();
   addFund(b->getCost() / 2);
   cout << "You successfully mortagaged this building! Now you have $" << money << endl;
 }
@@ -104,7 +103,7 @@ void Player::unMortgage(Building *b) {
     cout << "You don't have enough money to unmortgage this buidling! The price is " << price << " and you currently have " << money << endl;
     return;
   }
-  b->setUnmortgage();
+  b->unMortgage();
 }
 
 

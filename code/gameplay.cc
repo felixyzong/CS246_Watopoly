@@ -1,4 +1,5 @@
 #include "gameplay.h"
+#include "info.h"
 using namespace std;
 
 Gameplay::Gameplay(bool test): availablePlayers{'G','B','D','P','S','$','L','T'} {
@@ -21,8 +22,8 @@ Gameplay::Gameplay(bool test): availablePlayers{'G','B','D','P','S','$','L','T'}
   // every player enter their avatar
   for (int i = 0; i < playerCount; ++i) {
     cout << "Current available avatars: ";
-    for (char it : availablePlayers) {
-      cout  << " " << *it;
+    for (char name : availablePlayers) {
+      cout  << " " << name;
     }
     cout << endl;
     cout << "Player #" << i << ", please enter your avator char:";
@@ -31,8 +32,8 @@ Gameplay::Gameplay(bool test): availablePlayers{'G','B','D','P','S','$','L','T'}
     {
       cout << "Invalid avatar char, please choose from available!" << cout;
       cout << "Current available avatars: ";
-      for (auto it = availablePlayers.begin(); it != availablePlayers.end(); ++it) {
-        cout  << " " << *it;
+      for (char name : availablePlayers) {
+        cout  << " " << name;
       }
       cout << "Player #" << i << ", please enter your avator char:";
       cin >> playerChar;
@@ -42,51 +43,6 @@ Gameplay::Gameplay(bool test): availablePlayers{'G','B','D','P','S','$','L','T'}
   }
 
   // buildings initialize
-  // index 0 - 9
-  buildings.push_back(new NonPropertyBuilding(BuildingName::CollectOSAP));
-  buildings.push_back(new AcademicBuilding(BuildingName::AL));
-  buildings.push_back(new NonPropertyBuilding(BuildingName::SLC));
-  buildings.push_back(new AcademicBuilding(BuildingName::ML));
-  buildings.push_back(new NonPropertyBuilding(BuildingName::Tuition));
-  buildings.push_back(new ResidenceBuilding(BuildingName::MKV));
-  buildings.push_back(new AcademicBuilding(BuildingName::ECH));
-  buildings.push_back(new NonPropertyBuilding(BuildingName::NeedlesHall));
-  buildings.push_back(new AcademicBuilding(BuildingName::PAS));
-  buildings.push_back(new AcademicBuilding(BuildingName::HH));
-  // index 10 - 19
-  buildings.push_back(new NonPropertyBuilding(BuildingName::DCTimsLine));
-  buildings.push_back(new AcademicBuilding(BuildingName::RCH));
-  buildings.push_back(new GymsBuilding(BuildingName::PAC));
-  buildings.push_back(new AcademicBuilding(BuildingName::DWE));
-  buildings.push_back(new AcademicBuilding(BuildingName::CPH));
-  buildings.push_back(new ResidenceBuilding(BuildingName::UWP));
-  buildings.push_back(new AcademicBuilding(BuildingName::LHI));
-  buildings.push_back(new NonPropertyBuilding(BuildingName::SLC));
-  buildings.push_back(new AcademicBuilding(BuildingName::BMH));
-  buildings.push_back(new AcademicBuilding(BuildingName::OPT));
-  // index 20 - 29
-  buildings.push_back(new NonPropertyBuilding(BuildingName::GooseNesting));
-  buildings.push_back(new AcademicBuilding(BuildingName::EV1));
-  buildings.push_back(new AcademicBuilding(BuildingName::NeedlesHall));
-  buildings.push_back(new AcademicBuilding(BuildingName::EV2));
-  buildings.push_back(new AcademicBuilding(BuildingName::EV3));
-  buildings.push_back(new ResidenceBuilding(BuildingName::V1));
-  buildings.push_back(new AcademicBuilding(BuildingName::PHYS));
-  buildings.push_back(new AcademicBuilding(BuildingName::B1));
-  buildings.push_back(new GymsBuilding(BuildingName::CIF));
-  buildings.push_back(new AcademicBuilding(BuildingName::B2));
-  // index 30 - 39
-  buildings.push_back(new NonPropertyBuilding(BuildingName::GoToTims));
-  buildings.push_back(new AcademicBuilding(BuildingName::EIT));
-  buildings.push_back(new AcademicBuilding(BuildingName::ESC));
-  buildings.push_back(new NonPropertyBuilding(BuildingName::SLC));
-  buildings.push_back(new AcademicBuilding(BuildingName::C2));
-  buildings.push_back(new ResidenceBuilding(BuildingName::REV));
-  buildings.push_back(new NonPropertyBuilding(BuildingName::NeedlesHall));
-  buildings.push_back(new AcademicBuilding(BuildingName::MC));
-  buildings.push_back(new NonPropertyBuilding(BuildingName::CoopFee));
-  buildings.push_back(new AcademicBuilding(BuildingName::DC));
-
   b = new Board(buildings, players);
   curBuilding = buildings[0];
   curPlayer = players[0];
@@ -137,10 +93,9 @@ bool Gameplay::checkBankRuptcy() {
 
 
 void Gameplay::roll() {
-  std::vector<int> d = { 1, 2, 3, 4, 5, 6 };
-  unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-  int die1 = std::shuffle( d.begin(), d.end(), std::default_random_engine(seed) );
-  int die2 = std::shuffle( d.begin(), d.end(), std::default_random_engine(seed) );
+  vector<int> d = { 1, 2, 3, 4, 5, 6 };
+  int die1 = shuffle( d.begin(), d.end(), default_random_engine(seed) );
+  int die2 = shuffle( d.begin(), d.end(), default_random_engine(seed) );
   roll(die1,die2);
 }
 
@@ -149,6 +104,7 @@ void Gameplay::roll(int die1, int die2) {
     if (die1 == die2) {
       curPlayer->isInTimLine = false;
       roll(die1,die2);
+      return;
     } else {
       curPlayer->incTimTurn();
     }
@@ -160,14 +116,14 @@ void Gameplay::roll(int die1, int die2) {
   if (curBuilding->getBuildingType() != BuildingType::Nonproperty) {
     Player *owner = curBuilding.getOwner();
     if ( owner == nullptr ) {
-      std::cout << curBuilding->GetBuildingName() << " has no owner, do you want to buy it at a price of $" << curBuilding->getCost() << "?" << std::endl;
-      std::cout << "Please enter yes or no: ";
-      std::string yn;
-      std::cin >> yn;
+      cout << curBuilding->GetBuildingName() << " has no owner, do you want to buy it at a price of $" << curBuilding->getCost() << "?" << endl;
+      cout << "Please enter yes or no: ";
+      string yn;
+      cin >> yn;
       if (yn == "yes") {
         while(curPlayer->getMoney() < curBuilding->getCost()) {
-          std::cout << "You don't have enough money! You only have " << curPlayer->getMoney() << std::endl;
-          std::cout << "Would you like to trade/sell property/improvements? Please enter yes or no: ";
+          cout << "You don't have enough money! You only have " << curPlayer->getMoney() << endl;
+          cout << "Would you like to trade/sell property/improvements? Please enter yes or no: ";
           if (yn == "yes") {
             parseAction();
           } else if (yn == "no") {
@@ -176,7 +132,7 @@ void Gameplay::roll(int die1, int die2) {
             return;
           }
         }
-        std::cout << "You bought " << curBuilding->GetBuildingName() << " successfully!" << std::endl;
+        cout << "You bought " << curBuilding->GetBuildingName() << " successfully!" << endl;
         curPlayer->buyProperty(curBuilding);
       
       } else if (yn == "no") {
@@ -184,16 +140,16 @@ void Gameplay::roll(int die1, int die2) {
       }
     } else if ( owner == curPlayer && curBuilding->getBuidlingType() == BuildingType::Academic 
     && curBuilding->getMonopoly == curPlayer && curBuilding->getImprovement < 5) {
-      std::cout << "Improvement available at" << curBuilding->GetBuildingName() << std::cout;
+      cout << "Improvement available at" << curBuilding->GetBuildingName() << cout;
     } else if (owner != curPlayer) {
       curTuition = curBuilding->getTuition();
-      std::cout << "You need to pay " << curTuition << " tuition to " << owner->getName() << std::endl;
+      cout << "You need to pay " << curTuition << " tuition to " << owner->getName() << endl;
       while(curPlayer->getMoney() < curTuition) {
-        std::cout << "You don't have enough money! You only have " << curPlayer->getMoney() << std::endl;
-        std::cout << "You need to raise money!";
+        cout << "You don't have enough money! You only have " << curPlayer->getMoney() << endl;
+        cout << "You need to raise money!";
         if (!parseAction()) return;
       }
-      std::cout << "You paid tuition successfully." << std::endl;
+      cout << "You paid tuition successfully." << endl;
       curPlayer->addFund(-curTuition);
       owner->addFund(curTuition);
     }
@@ -220,31 +176,30 @@ void Gameplay::roll(int die1, int die2) {
       case BuildingName::GooseNesting:
         break;
       case BuildingName::Tuition:
-        std::cout << "You need to pay $300 or 10\%($" << curPlayer->getTotalWorth()/10 << ") of your total wealth:" << std::endl;
-        std::cout << "Please choose your way to pay (enter $300 or 10%): " << std::endl;
-        std::string payMethod;
-        std::cin >> payMethod;
+        cout << "You need to pay $300 or 10\%($" << curPlayer->getTotalWorth()/10 << ") of your total wealth:" << endl;
+        cout << "Please choose your way to pay (enter $300 or 10%): " << endl;
+        string payMethod;
+        cin >> payMethod;
         if (payMethod = "$300") curPlayer->addFund(-300);
         else if (payMethod = "10%") curPlayer->addFund(-curPlayer->getTotalWorth()/10);
         break;
       case BuildingName::CoopFee:
         curTuition = curBuilding->getTuition();
-        std::cout << "You need to pay " << curTuition << " COOP fee to University of Waterloo." << std::endl;
+        cout << "You need to pay " << curTuition << " COOP fee to University of Waterloo." << endl;
         while(curPlayer->getMoney() < curTuition) {
-          std::cout << "You don't have enough money! You only have " << curPlayer->getMoney() << std::endl;
-          std::cout << "You need to raise money!";
+          cout << "You don't have enough money! You only have " << curPlayer->getMoney() << endl;
+          cout << "You need to raise money!";
           if (!parseAction()) return;
         }
-        std::cout << "You paid COOP fee successfully." << std::endl;
+        cout << "You paid COOP fee successfully." << endl;
         curPlayer->addFund(-curTuition);
       case BuildingName::SLC:
         if (totalRimCup < 4) {
-          unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
           int result = curPlayer->rollDice(seed);
           if (result == 100) {
             curPlayer->gainCup();
             totalRimCup += 1;
-            std::cout << "You get a Rim Cup!" << std::endl;
+            cout << "You get a Rim Cup!" << endl;
           }
         }
         moveNum = curBuidling->MoveTo();
@@ -260,20 +215,19 @@ void Gameplay::roll(int die1, int die2) {
         break;
       case BuildingName::NeedlesHall:
         if (totalRimCup < 4) {
-          unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
           int result = curPlayer->rollDice(seed);
           if (result == 100) {
             curPlayer->gainCup();
             totalRimCup += 1;
-            std::cout << "You get a Rim Cup!" << std::endl;
+            cout << "You get a Rim Cup!" << endl;
           }
         }
         curTuition = curBuilding->tuition();
         if (curTuition > 0) {
-          std::cout << "You gain $" << curTuition << "." << std::endl;
+          cout << "You gain $" << curTuition << "." << endl;
           curPlayer->addFund(curTuition);
         } else {
-          std::cout << "You lose $" << curTuition << "." << std::endl;\
+          cout << "You lose $" << curTuition << "." << endl;\
           if (curPlayer->money + curTuition < 0) {
             curPlayer->addFund(-curPlayer->money);
           }
@@ -286,7 +240,9 @@ void Gameplay::roll(int die1, int die2) {
 }
 
 
-
+void setseed(seed) {
+  this->seed = seed;
+}
 
 
 

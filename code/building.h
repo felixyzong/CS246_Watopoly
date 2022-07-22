@@ -7,9 +7,8 @@
 class Building : public Subject<BuildingInfo> {
   BuildingType bt;
   BuildingName bn;
-  std::vector<int> info;
  public:
-  virtual Buidling(BuildingType bt, BuidlingName bn);
+  virtual Building(BuildingType bt, BuidlingName bn);
   virtual BuildingName GetBuildingName() const { return bn; }
   virtual int tuition() const = 0;
   virtual BuildingType getBuidlingType() const { return bt; }
