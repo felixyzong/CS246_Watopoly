@@ -10,9 +10,11 @@
 class Board {
   std::vector<Building *> buildings;
  public:
+  Board();
   Building * getBuilding(int pos);
   void init();
   int searchBuilding(Building *);
+  ~Board();
 };
 
 
