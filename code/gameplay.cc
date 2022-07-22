@@ -40,9 +40,53 @@ Gameplay::Gameplay(bool test): availablePlayers{'G','B','D','P','S','$','L','T'}
     players.push_back(new Player(defaultMoney, playerChar));
   }
 
-  // element initialize
-  b = new Board();
-  td = new TextDisplay(b, players);
+  // buildings initialize
+  // index 0 - 9
+  buildings.push_back(new NonPropertyBuilding(BuildingName::CollectOSAP));
+  buildings.push_back(new AcademicBuilding(BuildingName::AL));
+  buildings.push_back(new NonPropertyBuilding(BuildingName::SLC));
+  buildings.push_back(new AcademicBuilding(BuildingName::ML));
+  buildings.push_back(new NonPropertyBuilding(BuildingName::Tuition));
+  buildings.push_back(new ResidenceBuilding(BuildingName::MKV));
+  buildings.push_back(new AcademicBuilding(BuildingName::ECH));
+  buildings.push_back(new NonPropertyBuilding(BuildingName::NeedlesHall));
+  buildings.push_back(new AcademicBuilding(BuildingName::PAS));
+  buildings.push_back(new AcademicBuilding(BuildingName::HH));
+  // index 10 - 19
+  buildings.push_back(new NonPropertyBuilding(BuildingName::DCTimsLine));
+  buildings.push_back(new AcademicBuilding(BuildingName::RCH));
+  buildings.push_back(new GymsBuilding(BuildingName::PAC));
+  buildings.push_back(new AcademicBuilding(BuildingName::DWE));
+  buildings.push_back(new AcademicBuilding(BuildingName::CPH));
+  buildings.push_back(new ResidenceBuilding(BuildingName::UWP));
+  buildings.push_back(new AcademicBuilding(BuildingName::LHI));
+  buildings.push_back(new NonPropertyBuilding(BuildingName::SLC));
+  buildings.push_back(new AcademicBuilding(BuildingName::BMH));
+  buildings.push_back(new AcademicBuilding(BuildingName::OPT));
+  // index 20 - 29
+  buildings.push_back(new NonPropertyBuilding(BuildingName::GooseNesting));
+  buildings.push_back(new AcademicBuilding(BuildingName::EV1));
+  buildings.push_back(new AcademicBuilding(BuildingName::NeedlesHall));
+  buildings.push_back(new AcademicBuilding(BuildingName::EV2));
+  buildings.push_back(new AcademicBuilding(BuildingName::EV3));
+  buildings.push_back(new ResidenceBuilding(BuildingName::V1));
+  buildings.push_back(new AcademicBuilding(BuildingName::PHYS));
+  buildings.push_back(new AcademicBuilding(BuildingName::B1));
+  buildings.push_back(new GymsBuilding(BuildingName::CIF));
+  buildings.push_back(new AcademicBuilding(BuildingName::B2));
+  // index 30 - 39
+  buildings.push_back(new NonPropertyBuilding(BuildingName::GoToTims));
+  buildings.push_back(new AcademicBuilding(BuildingName::EIT));
+  buildings.push_back(new AcademicBuilding(BuildingName::ESC));
+  buildings.push_back(new NonPropertyBuilding(BuildingName::SLC));
+  buildings.push_back(new AcademicBuilding(BuildingName::C2));
+  buildings.push_back(new ResidenceBuilding(BuildingName::REV));
+  buildings.push_back(new NonPropertyBuilding(BuildingName::NeedlesHall));
+  buildings.push_back(new AcademicBuilding(BuildingName::MC));
+  buildings.push_back(new NonPropertyBuilding(BuildingName::CoopFee));
+  buildings.push_back(new AcademicBuilding(BuildingName::DC));
+
+  b = new Board(buildings, players);
   curPlayer = players[0];
   isTest = test;
 

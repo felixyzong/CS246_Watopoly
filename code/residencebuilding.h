@@ -4,15 +4,15 @@
 
 class Player;
 
-class GymsBuilding : public Building {
+class ResidenceBuilding : public Building {
   Player* owner;
   bool mortgage;
  public:
-  GymsBuilding(BuildingName bn);
+  ResidenceBuilding(BuildingName bn);
   virtual int tuition() const override;
-  Player* getOwner();
+  Player *getOwner();
   virtual BuildingInfo getInfo() const override;
-  ~GymsBuilding();
+  ~ResidenceBuidling();
   bool getMortgage();
   int mortgage();
   int unmortgage();

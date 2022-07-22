@@ -5,6 +5,10 @@
 #include <fstream>
 #include "textdisplay.h"
 #include "building.h"
+#include "residencebuilding.h"
+#include "academicbuilding.h"
+#include "gymsbuilding.h"
+#include "nonpropertybuilding.h"
 #include "board.h"
 
 /*
