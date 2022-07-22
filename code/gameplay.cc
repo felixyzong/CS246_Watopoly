@@ -1,40 +1,41 @@
 #include "gameplay.h"
+using namespace std;
 
 Gameplay::Gameplay(bool test): availablePlayers{'G','B','D','P','S','$','L','T'} {
   const int defaultMoney = 1500;
   int playerCount;
   char playerChar;
-  std::cout << "Please enter the number of players(at lease 6, at most 8):";
-  std::cin >> playerCount;
+  cout << "Please enter the number of players(at lease 6, at most 8):";
+  cin >> playerCount;
   while (playerCount < 6 || playerCount > 8) {
-    std::cout << "Invalid number of players." << std::endl;
-    std::cout << "Please enter the number of players(at lease 6, at most 8):";
-    std::cin >> playerCount;
+    cout << "Invalid number of players." << endl;
+    cout << "Please enter the number of players(at lease 6, at most 8):";
+    cin >> playerCount;
   }
 
   // display a list of avatas for choosing
-  std::cout << "Please choose your avatar from the following:" << std::endl;
-  std::cout << "| Goose | GRT bus | Tim Hortons Doughnut | Professor | Student | Money | Laptop | Pink tie |" << std::endl;
-  std::cout << "|   G   |    B    |           D          |     P     |    S    |   $   |   L    |    T     |" << std::endl;
+  cout << "Please choose your avatar from the following:" << endl;
+  cout << "| Goose | GRT bus | Tim Hortons Doughnut | Professor | Student | Money | Laptop | Pink tie |" << endl;
+  cout << "|   G   |    B    |           D          |     P     |    S    |   $   |   L    |    T     |" << endl;
 
   // every player enter their avatar
   for (int i = 0; i < playerCount; ++i) {
-    std::cout << "Current available avatars: ";
-    for (auto it = availablePlayers.begin(); it != availablePlayers.end(); ++it) {
-      std::cout  << " " << *it;
+    cout << "Current available avatars: ";
+    for (char it : availablePlayers) {
+      cout  << " " << *it;
     }
-    std::cout << std::endl;
-    std::cout << "Player #" << i << ", please enter your avator char:";
-    std::cin >> playerChar;
-    while (std::find(defaultPlayerName.begin(), defaultPlayerName.end(), x) == defaultPlayerName.end())
+    cout << endl;
+    cout << "Player #" << i << ", please enter your avator char:";
+    cin >> playerChar;
+    while (find(defaultPlayerName.begin(), defaultPlayerName.end(), x) == defaultPlayerName.end())
     {
-      std::cout << "Invalid avatar char, please choose from available!" << std::cout;
-      std::cout << "Current available avatars: ";
+      cout << "Invalid avatar char, please choose from available!" << cout;
+      cout << "Current available avatars: ";
       for (auto it = availablePlayers.begin(); it != availablePlayers.end(); ++it) {
-        std::cout  << " " << *it;
+        cout  << " " << *it;
       }
-      std::cout << "Player #" << i << ", please enter your avator char:";
-      std::cin >> playerChar;
+      cout << "Player #" << i << ", please enter your avator char:";
+      cin >> playerChar;
     }
     availablePlayers.erase(playerChar);
     players.push_back(new Player(defaultMoney, playerChar));

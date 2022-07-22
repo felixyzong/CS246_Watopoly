@@ -2,10 +2,12 @@
 #define BUILDING_H
 #include "subject.h"
 #include "info.h"
+#include <vector>
 
 class Building : public Subject<BuildingInfo> {
   BuildingType bt;
   BuildingName bn;
+  std::vector<int> info;
  public:
   virtual Buidling(BuildingType bt, BuidlingName bn);
   virtual BuildingName GetBuildingName() const { return bn; }
