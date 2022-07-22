@@ -5,6 +5,8 @@
 #include "player.h"
 #include <random>
 #include <iostream>
+#include <algorithm>
+
 using namespace std;
 Player::Player(long money, char name): money{money}, name{name} {}
 
@@ -79,6 +81,14 @@ void Player::addProperty(Building *b) {
 }
 
 void Player::mortgage(Building *b) {
+  if (find(property.begin(), property.end(), b) == property.end()) {
+    cout << "You don't own the building you are mortgaging!" << endl;
+    return;
+  }
+  if (b->getMortgage()) {
+    cout << "This building is under mortgage! Try another building!" << endl;
+    return;
+  }
   if (b->getImprovement() != 0) {
     cout << "You must sold improvements to mortgage this building!" << endl;
     return;
