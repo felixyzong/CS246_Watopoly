@@ -38,7 +38,7 @@ class Gameplay {
 	void auction(Building *b); // begin an auction on building b, input for a single player will be like [num]/W. "W" means withdraw
 
   bool parseAction(); // return true for normal moves, return false for bankrupt
-  void trade(Player* p, int money);
+  void trade(Building* b, Player* p, int money);
   void roll();
   void roll(int die1, int die2); // only availale in test mode
   void switchPlayer();
@@ -53,6 +53,7 @@ class Gameplay {
   void saveGame();
 	void loadGame(std::string file);
   ~Gameplay();
+  friend std::ostream &operator<<(std::ostream& out, Gameplay* gp);
 }
 
 

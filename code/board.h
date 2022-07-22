@@ -18,7 +18,7 @@ class Board : public Observer<BuildingInfo>, public Observer<PlayerInfo> {
   Board(std::vector<Building*> buildings, std::vector<Player*> players);
   virtual void notify(Subject<BuildingInfo> &whoFrom) override;
   virtual void notify(Subject<PlayerInfo> &whoFrom) override;
-  friend std::ostream &operator<<(std::ostream &out, constTextDisplay* td);
+  friend std::ostream &operator<<(std::ostream &out, Board* b);
   ~Board();
 };
 
