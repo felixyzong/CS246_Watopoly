@@ -239,10 +239,58 @@ void Gameplay::roll(int die1, int die2) {
   curPlayer->rolled = true;
 }
 
-
 void setseed(seed) {
   this->seed = seed;
 }
 
+
+bool Gameplay::parseAction() {
+
+}
+
+void Gameplay::trade(Building* b, Player* p, int money) {
+
+}
+
+void Gameplay::auction(Building* b) {
+
+}
+
+void Gameplay::improve(AcademicBuilding *ab, char instruction) {
+
+}
+
+void Gameplay::mortage(Building *b) {
+
+}
+
+void Gameplay::unmortage(Building *b) {
+
+}
+
+void Gameplay::assets() {
+
+}
+
+void Gameplay::all() {
+
+}
+
+
+void Gameplay::play() {
+
+}
+
+void Gameplay::saveGame(){
+
+}
+
+void Gameplay::loadGame(std::string file) {
+
+}
+
+std::ostream &operator<<(std::ostream& out, Gameplay* gp) {
+
+}
 
 
