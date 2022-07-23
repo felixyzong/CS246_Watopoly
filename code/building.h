@@ -12,7 +12,7 @@ class Building : public Subject<BuildingInfo> {
   virtual BuildingName GetBuildingName() const { return bn; }
   virtual int tuition() const = 0;
   virtual BuildingType getBuidlingType() const { return bt; }
-  virtual ~building() = default;
+  virtual ~Building() = default;
   virtual InfoType getInfo() const = 0;
 };
 
