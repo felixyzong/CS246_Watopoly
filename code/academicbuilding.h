@@ -17,6 +17,7 @@ class AcademicBuilding : public Building {
   bool sellImprovement();
   virtual int tuition() const override;
   Player *getOwner();
+  void setOwner(Player *p);
   virtual BuildingInfo getInfo() const override;
   ~AcademicBuidling();
   bool getMortgage();

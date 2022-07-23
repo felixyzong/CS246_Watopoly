@@ -454,7 +454,7 @@ void Gameplay::trade(char pn, string give, string receive) {
       while (cin >> command) {
         if (command == "accept") {
           cout << "Trade accepted!" << endl;
-          curPlayer->property.erase(giveBuilding);
+          curPlayer->removeProperty(giveBuilding);
           curPlayer->addFund(receiveMoney);
           tradePlayer->addProperty(giveBuilding);
           tradePlayer->addFund(receiveMoney);
@@ -483,11 +483,11 @@ void Gameplay::trade(char pn, string give, string receive) {
         if (command == "accept") {
           cout << "Trade accepted!" << endl;
           curPlayer->addProperty(receiveBuidling);
-          curPlayer->property.erase(giveBuilding);
-          tradePlayer->property.erase(receiveBuidling);
+          curPlayer->removeProperty(giveBuilding);
+          tradePlayer->removeProperty(receiveBuidling);
           tradePlayer->addProperty(giveBuilding);
-          receiveBuidling->owner = curPlayer;
-          giveBuidling->owner = tradePlayer;
+          receiveBuidling->setOwner(curPlayer);
+          giveBuidling->setOwner(tradePlayer);
           break;
         } else if (command == "reject") {
           cout << "Trade rejected!" << endl;

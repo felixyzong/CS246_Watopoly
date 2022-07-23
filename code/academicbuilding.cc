@@ -45,3 +45,6 @@ void AcademicBuilding::unMortgage() {
   mortgage = false;
 }
 
+void AcademicBuilding::setOwner(Player *p) {
+  owner = p;
+}

@@ -35,6 +35,7 @@ class Player {
   char getName();
   bool isRolled();
   void addProperty(Building *b);
+  void removeProperty(Building *b);
   void buyImprovement(Building *b);
   void mortgage(Building *b);
   void unMortgage(Building *b);
