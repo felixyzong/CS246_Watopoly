@@ -7,22 +7,26 @@ class Player;
 
 class AcademicBuilding : public Building {
   MonopolyBlock mb;
-  Player* owner;
-  int improvement;
-  bool mortgage;
+  Player* owner = nullptr;
+  int improvement = 0;
+  bool mortgage = 0;
   std::vector<int> info;
  public:
   AcademicBuilding(BuildingName bn, std::vector<int> info);
-  bool AddImprovement(); // return false if already 5 improvements
-  bool sellImprovement();
-  virtual int tuition() const override;
+  int getCost() const override;
+  int getWorth() const override;
+  MonopolyBlock getMonopoly();
+  int tuition() const override;
   Player *getOwner();
   void setOwner(Player *p);
-  virtual BuildingInfo getInfo() const override;
-  ~AcademicBuidling();
+  bool AddImprovement(); // return false if already 5 improvements
+  bool sellImprovement();
+  int getImprovement();
   bool getMortgage();
   void mortgage();
   void unMortgage();
+  BuildingInfo getInfo() const override;
+  ~AcademicBuilding();
 };
 
 #endif
