@@ -561,41 +561,16 @@ void Gameplay::improve(string bn, string instruction) {
   Building *bs = b->findBuilding(bn);
   if (bs == nullptr) {
     cout << bn << " is not a name of a property building!" << endl;
-
   } else if (bs->getOwner() != curPlayer) {
     cout << bn << " is not owned by you!" << endl;
-
   } else if (bs->getBuidlingType() != BuildingType::Academic) {
     cout << bn << " is not an academic building!" << endl;
-
   } else if (bs->getMonopoly() != curPlayer) {
     cout << "You don't own all buildings in that monopoly block, you can't add/sell improvement!" << endl;
-
   } else if (instruction == "buy") {
-    if (b->improvement == 5) {
-      cout << "There are already 5 improvements, you can't add more!" << endl;
-    
-    } else if (bs->getImprovementCost() > curPlayer->money) {
-      // need getImprovementCost() in academic building class
-      cout << "You don't have enough money!" << endl;
-
-    } else { 
-      bs->AddImprovement();
-      // need getImprovementCost() in academic building class
-      curPlayer->addFund(-b->getImprovementCost());
-    }
-
+    if(!bs->addImprovement()) cout << "Unsucessful buy!" << endl;
   } else if (instruction == "sell") {
-    if (bs->improvement == 0) {
-      cout << "There is no improvement at this building, you can't sell!" << endl;
-
-    } else {
-      // need removeImprovement() in academic building class
-      bs->removeImprovement();
-      // need getImprovementRefund() in academic building class
-      curPlayer->addFund(bs->getImprovementRefund())
-    }
-
+    if(!bs->removeImprovement()) cout << "Unsuccessful sell!" << endl;
   } else {
     cout << "Invalid command, please enter buy/sell for instruction!" << endl;
   }
