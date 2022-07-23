@@ -45,8 +45,8 @@ const std::vector<int> MC{350, 200, 35, 175, 500, 1100, 1300, 1500};
 const std::vector<int> DC{400, 200, 50, 200, 600, 1400, 1700, 2000};
 
 int randomGen(int low, int high, unsigned seed) {
-  default_random_engine rng{seed};
-  uniform_int_distribution<> distrib(low, high);
+  std::default_random_engine rng{seed};
+  std::uniform_int_distribution<> distrib(low, high);
   return distrib(rng);
 }
 

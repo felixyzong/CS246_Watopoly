@@ -20,8 +20,7 @@ This class will be responsible for interpreting input as instructions.
 It will keep track of the status of each player, players assigned, etc. 
 */
 class Gameplay {
-  Board* b;
-	std::vector<Building *> buildings;
+    Board* b;
 	std::vector<Player *> players;
 	std::vector<char> availablePlayers;
 	Player *curPlayer;

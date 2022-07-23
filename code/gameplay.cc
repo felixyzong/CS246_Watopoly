@@ -1,5 +1,6 @@
 #include "gameplay.h"
 #include "info.h"
+
 using namespace std;
 
 Gameplay::Gameplay(bool test): availablePlayers{'G','B','D','P','S','$','L','T'} {
@@ -43,8 +44,8 @@ Gameplay::Gameplay(bool test): availablePlayers{'G','B','D','P','S','$','L','T'}
   }
 
   // buildings initialize
-  b = new Board(buildings, players);
-  curBuilding = buildings[0];
+  b = new Board();
+  curBuilding = b->getBuilding(0);
   curPlayer = players[0];
   isTest = test;
 
@@ -53,7 +54,6 @@ Gameplay::Gameplay(bool test): availablePlayers{'G','B','D','P','S','$','L','T'}
 
 Gameplay::~Gameplay() {
   delete b;
-  delete buildings;
   for (auto it = players.begin(); it != players.end(); ++it) delete it;
 }
 
@@ -86,7 +86,7 @@ void Gameplay::switchPlayer() {
     index++;
   } else index = 0;
   curPlayer = players[index];
-  curBuilding = buildings[curPlayer->getPos()];
+  curBuilding = b->getBuilding(curPlayer->getPos());
   curTuition = 0;
   curPlayer->rolled = false;
 }
@@ -404,7 +404,7 @@ void Gameplay::trade(char pn, string give, string receive) {
       return;
     }
 
-    Building *receiveBuidling = findBuilding(strtobn(receive));
+    Building *receiveBuidling = b->findBuilding(receive);
     if (receiveBuidling == nullptr) {
       cout << receive << " is not a valid building name!" << endl;
       return;
@@ -433,7 +433,7 @@ void Gameplay::trade(char pn, string give, string receive) {
       }
     }
   } else {
-    Building *giveBuilding = findBuilding(strtobn(give));
+    Building *giveBuilding = b->findBuilding(give);
     if (giveBuilding == nullptr) {
       cout << give << " is not a valid building name!" << endl;
       return;
@@ -468,7 +468,7 @@ void Gameplay::trade(char pn, string give, string receive) {
         }
       }
     } else {
-      Building *receiveBuidling = findBuilding(strtobn(receive));
+      Building *receiveBuidling = b->findBuilding(receive);
       if (receiveBuidling == nullptr) {
         cout << receive << " is not a valid building name!" << endl;
         return;
@@ -503,9 +503,9 @@ void Gameplay::trade(char pn, string give, string receive) {
 
 
 // Auction program
-void Gameplay::auction(Building* b) {
-  cout << "Auction of building " << bntostr(b->getBuidlingName()) << " starts!" << endl;
-  int curBid = b->getCost()-1; // base bid
+void Gameplay::auction(Building* bs) {
+  cout << "Auction of building " << bntostr(bs->getBuidlingName()) << " starts!" << endl;
+  int curBid = bs->getCost()-1; // base bid
   int playersCount = players.size();
   std::vector<bool> auctionStatus(playersCount);
   for (int i = 0; i < playersCount; i++) {
@@ -518,13 +518,13 @@ void Gameplay::auction(Building* b) {
     if (i = players.size()) i = 0;
     if (!auctionStatus[i]) continue;
 
-    if (playersCount = 1 && curBid != b->getCost()-1) {
+    if (playersCount = 1 && curBid != bs->getCost()-1) {
       cout << "Congradulations! Player " << p->getName() << " buys building " << bntostr(b->GetBuildingName()) << " at price of $" << curBid << endl;
       p->addProperty(b);
       p->addFund(-curBid);
-      b->owner = p;
+      bs->getOwner() = p;
       return;
-    } else if (playersCount = 0 && curBid == b->getCost()-1) {
+    } else if (playersCount = 0 && curBid == bs->getCost()-1) {
       cout << "No player offers a bid, auction aborts." << endl;
       return;
     } else {
@@ -558,42 +558,42 @@ void Gameplay::auction(Building* b) {
 
 // improve <property> buy/sell
 void Gameplay::improve(string bn, string instruction) {
-  Building *b = findBuilding(bntostr(bn));
-  if (b == nullptr) {
+  Building *bs = b->findBuilding(bn);
+  if (bs == nullptr) {
     cout << bn << " is not a name of a property building!" << endl;
 
-  } else if (b->owner != curPlayer) {
+  } else if (bs->getOwner() != curPlayer) {
     cout << bn << " is not owned by you!" << endl;
 
-  } else if (b->getBuidlingType != BuildingType::Academic) {
+  } else if (bs->getBuidlingType() != BuildingType::Academic) {
     cout << bn << " is not an academic building!" << endl;
 
-  } else if (b->getMonopoly() != curPlayer) {
+  } else if (bs->getMonopoly() != curPlayer) {
     cout << "You don't own all buildings in that monopoly block, you can't add/sell improvement!" << endl;
 
   } else if (instruction == "buy") {
     if (b->improvement == 5) {
       cout << "There are already 5 improvements, you can't add more!" << endl;
     
-    } else if (b->getImprovementCost() > curPlayer->money) {
+    } else if (bs->getImprovementCost() > curPlayer->money) {
       // need getImprovementCost() in academic building class
       cout << "You don't have enough money!" << endl;
 
     } else { 
-      b->AddImprovement();
+      bs->AddImprovement();
       // need getImprovementCost() in academic building class
       curPlayer->addFund(-b->getImprovementCost());
     }
 
   } else if (instruction == "sell") {
-    if (b->improvement == 0) {
+    if (bs->improvement == 0) {
       cout << "There is no improvement at this building, you can't sell!" << endl;
 
     } else {
       // need removeImprovement() in academic building class
-      b->removeImprovement();
+      bs->removeImprovement();
       // need getImprovementRefund() in academic building class
-      curPlayer->addFund(b->getImprovementRefund())
+      curPlayer->addFund(bs->getImprovementRefund())
     }
 
   } else {
@@ -604,14 +604,14 @@ void Gameplay::improve(string bn, string instruction) {
 
 // mortgage building
 void Gameplay::mortgage(string bn) {
-  Building *b = findBuilding(bntostr(bn));
-  if (b == nullptr) {
+  Building *bs = b->findBuilding(bn);
+  if (bs == nullptr) {
     cout << bn << " is not a name of a property building!" << endl;
 
-  } else if (b->owner != curPlayer) {
+  } else if (bs->getOwner() != curPlayer) {
     cout << bn << " is not owned by you!" << endl;
 
-  } else if (b->getBuidlingType != BuildingType::Academic) {
+  } else if (bs->getBuidlingType() != BuildingType::Academic) {
     cout << bn << " is not an academic building!" << endl;
 
   } else {
@@ -623,14 +623,14 @@ void Gameplay::mortgage(string bn) {
 
 // unmortgage building
 void Gameplay::unmortgage(string bn) {
-  Building *b = findBuilding(bntostr(bn));
-  if (b == nullptr) {
+  Building *bs = b->findBuilding(bn);
+  if (bs == nullptr) {
     cout << bn << " is not a name of a property building!" << endl;
 
-  } else if (b->owner != curPlayer) {
+  } else if (bs->getOwner() != curPlayer) {
     cout << bn << " is not owned by you!" << endl;
 
-  } else if (b->getBuidlingType != BuildingType::Academic) {
+  } else if (bs->getBuidlingType() != BuildingType::Academic) {
     cout << bn << " is not an academic building!" << endl;
 
   } else {
@@ -677,7 +677,37 @@ void Gameplay::play() {
 
 
 
-void Gameplay::saveGame(){
+void Gameplay::saveGame(string save_name){
+  ofstream saving;
+  saving.open(save_name + ".txt");
+  saving << players.size() << endl;
+  for (Player * p : players) {
+    saving << "Player " << p->getName() << " " << p->getTimCups() << " " << p->getTotalWorth() << " " << p->getPos();
+    if (p->getPos() == 10 && p->isInTim()) {
+      cout << " "  << 1 << " " << p->getTimTurn() << endl;
+    } else if (p->getPos() == 10) {
+      cout << " 0" << endl;
+    } else {
+      cout << endl;
+    }
+  }
+  for (int i = 0; i < 40; i++) {
+    Building *bs = b->getBuilding(i);
+    if (bs->getBuidlingType() == BuildingType::Nonproperty) continue;
+    saving << bntostr(bs->getBuildingName()) << " ";
+    if (bs->getOwner() == nullptr) saving << "BANK ";
+    else saving << bs->getOwner()->getName() << " ";
+    if (bs->getBuidlingType() == BuildingType::Gyms || bs->getBuidlingType() == BuildingType::Residence ) {
+      saving << 0 << endl;
+    }
+    else {
+      if (bs->getMortgage()) {
+        saving << -1 << endl;
+      } else {
+        saving << bs->getImprovement() << endl;
+      }
+    }
+  }
 
 }
 

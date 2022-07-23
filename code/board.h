@@ -10,12 +10,17 @@
 #include "observer.h"
 #include "subject.h"
 #include <vector>
+#include <memory>
 #include <iostream>
+#include <string>
 
 class Board : public Observer<BuildingInfo>, public Observer<PlayerInfo> {
   std::vector<std::vector<char>> text;
+  std::vecotr<Building *> buildings;
  public:
-  Board(std::vector<Building*> buildings, std::vector<Player*> players);
+  Board(); // initialize the board, can be extended to multiple themes by parameter
+  Building *getBuilding(int pos);
+  Building *findBuilding(std::string name);
   virtual void notify(Subject<BuildingInfo> &whoFrom) override;
   virtual void notify(Subject<PlayerInfo> &whoFrom) override;
   friend std::ostream &operator<<(std::ostream &out, Board* b);
