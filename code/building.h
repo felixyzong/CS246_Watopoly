@@ -8,18 +8,16 @@ class Building : public Subject<BuildingInfo> {
   BuildingType bt;
   BuildingName bn;
  public:
-  virtual Building(BuildingType bt, BuildingName bn);
-  virtual BuildingName GetBuildingName() const { return bn; }
-  virtual int getCost() const = 0;
-  virtual int getWorth() const = 0;
-  virtual int tuition() const = 0;
-  virtual bool getMortgage() const = 0;
-  virtual bool getImprovement() const = 0;
-  virtual int mortgage() const = 0;
-  virtual int unMortgage() const = 0;
-  virtual BuildingType getBuildingType() const { return bt; }
+  virtual Building(BuildingType bt, BuildingName bn): bt{bt}, bn{bn} {}
   virtual ~Building() = default;
-  virtual InfoType getInfo() const = 0;
+
+  virtual BuildingName getBuildingName() const { return bn; }
+  virtual BuildingType getBuildingType() const { return bt; }
+  
+  virtual InfoType getInfo() const = 0; // inherit from Subject<Info>
+
+  virtual int tuition() const = 0; // get tuition that need to be paid if player land on this building
+  virtual int movement() const = 0; // get steps that player need to move if player land on this building
 };
 
 #endif

@@ -19,7 +19,7 @@ void Subject<InfoType>::attach(Observer<InfoType> *o) {
 
 template <typename InfoType>
 void Subject<InfoType>::notifyObservers() {
-  for (auto &ob : observers) ob->notify(*this);
+  for (auto &ob : this->obs) ob->notify(*this);
 }
 
 #endif

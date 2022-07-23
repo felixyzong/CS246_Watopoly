@@ -16,7 +16,7 @@
 
 class Board : public Observer<BuildingInfo>, public Observer<PlayerInfo> {
   std::vector<std::vector<char>> text;
-  std::vecotr<Building *> buildings;
+  std::vector<Building *> buildings;
  public:
   Board(); // initialize the board, can be extended to multiple themes by parameter
   Building *getBuilding(int pos);

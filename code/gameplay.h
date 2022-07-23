@@ -20,8 +20,9 @@ This class will be responsible for interpreting input as instructions.
 It will keep track of the status of each player, players assigned, etc. 
 */
 class Gameplay {
-    Board* b;
+  Board* b;
 	std::vector<Player *> players;
+  std::vector<Player *> monopolist;
 	std::vector<char> availablePlayers;
 	Player *curPlayer;
   Building *curBuilding;
@@ -29,6 +30,8 @@ class Gameplay {
   bool isTest;
   int curTuition;
   int totalRimCup = 0;
+
+
   friend class Player;
   friend class Building;
 
@@ -49,12 +52,12 @@ class Gameplay {
   void unmortgage(Building *b);
   void assets();
   void all();
+  void saveGame();
+  void loadGame(std::string file);
  public:
   void setseed(unsigned seed);
   Gameplay(bool test);
   void play();
-  void saveGame();
-  void loadGame(std::string file);
   ~Gameplay();
   friend std::ostream &operator<<(std::ostream& out, Gameplay* gp);
 }
