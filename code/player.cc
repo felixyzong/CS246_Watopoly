@@ -97,6 +97,7 @@ void Player::mortgage(Building *b) {
   cout << "You successfully mortagaged this building! Now you have $" << money << endl;
 }
 
+
 void Player::unMortgage(Building *b) {
   int price = b->getCost() * 0.6;
   if (money < price) {

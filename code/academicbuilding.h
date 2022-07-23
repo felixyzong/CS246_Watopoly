@@ -20,8 +20,8 @@ class AcademicBuilding : public Building {
   virtual BuildingInfo getInfo() const override;
   ~AcademicBuidling();
   bool getMortgage();
-  int mortgage();
-  int unMortgage();
+  void mortgage();
+  void unMortgage();
 };
 
 #endif
