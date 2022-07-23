@@ -8,10 +8,16 @@ class Building : public Subject<BuildingInfo> {
   BuildingType bt;
   BuildingName bn;
  public:
-  virtual Building(BuildingType bt, BuidlingName bn);
+  virtual Building(BuildingType bt, BuildingName bn);
   virtual BuildingName GetBuildingName() const { return bn; }
+  virtual int getCost() const = 0;
+  virtual int getWorth() const = 0;
   virtual int tuition() const = 0;
-  virtual BuildingType getBuidlingType() const { return bt; }
+  virtual bool getMortgage() const = 0;
+  virtual bool getImprovement() const = 0;
+  virtual int mortgage() const = 0;
+  virtual int unMortgage() const = 0;
+  virtual BuildingType getBuildingType() const { return bt; }
   virtual ~Building() = default;
   virtual InfoType getInfo() const = 0;
 };
