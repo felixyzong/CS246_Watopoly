@@ -42,4 +42,3 @@ class GymsBuilding : public Building, public Observer<BuildingInfo>{
 };
 
 #endif
-#endif

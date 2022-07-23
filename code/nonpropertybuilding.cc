@@ -22,11 +22,11 @@ int NonPropertyBuilding::tuition() const {
         case 7: case 8: case 9: case 10: case 11: case 12:
           return -25;
         case 13: case 14: case 15:
-          return 50;
+          return -50;
         case 16: case 17:
-          return 100;
+          return -100;
         case 18:
-          return 150;
+          return -150;
       }
     case default:
       return 0;

@@ -9,74 +9,102 @@
 #include <algorithm>
 
 using namespace std;
-Player::Player(long money, char name): money{money}, name{name} {}
+Player::Player(int money, char name): money{money}, name{name} {}
+
+char Player::getName() { return name; }
+int Player::getMoney() {return money; }
+int Player::getPos() { return pos; }
+int Player::getTimTurn() { return TimLineTurn; }
+int Player::getCup() { return cup;}
+bool Player::isInTim() { return isInTimLine; }
+
+int Player::getTotalWorth() {
+  int totalWorth = 0;
+  for (auto it : property) {
+    totalWorth += it->getWorth();
+  }
+  return totalWorth;
+}
 
 void Player::addFund(int num) {
   money += num;
 }
 
-int Player::getTotalWorth() {
-  int worth = 0;
-  for (Building * b : property) {
-    worth += b->getWorth();
-  }
-  return worth;
-}
-
-int Player::rollDice(unsigned seed) {
-  return randomGen(1, 6, seed);
-}
-
-void Player::move(int num) {
-  pos += num;
-  pos %= 40;
-}
-
 void Player::gainCup() {
-  cup++;
+  cup += 1;
 }
 
-int Player::getTimTurn() {
-  return TimLineTurn;
-}
-
-int Player::incTimTurn() {
-  TimLineTurn++;
-}
-
-bool Player::isInTim() {
-  return isInTimLine;
-}
-
-void Player::buyProperty(Building *b) {
-  int price = b->getCost();
-  if (price > money) {
-    cout << "You don't have enough money! Please try to raise fund.";
-    return;
+// return true if player cannot leave, return false if can leave
+bool Player::incTimTurn() {
+  if (cup > 0) {
+    cup -= 1;
+    isInTimLine = false;
+    cout << "You leave tim line because you have a Roll up the Rim Cup!" << endl;
+    return false;
+  } else if (TimLineTurn == 3) {
+    TimLineTurn = 0;
+    isInTimLine = false;
+    cout << "You leave tim line because you have been here for 3 turn!" << endl;
+    return false;
+  } else {
+    cout << "Do you want to pay $50 to leave tim line? Please enter yes or no: ";
+    string command;
+    while (cin >> command) {
+      if (command == "yes") {
+        if (money < 50) {
+          cout << "You don't have enough money!" << endl;
+          break;
+        }
+        cout << "You leave tim line because you paid $50!" << endl;
+        money -= 50;
+        TimLineTurn = 0;
+        isInTimLine = false;
+        return false;
+      } else if (command == "no") break;
+      else {
+        cout << "Invalid command! Please enter yes or no: ";
+      }
+    }
+    TimLineTurn += 1;
+    isInTimLine = true;
+    cout << "It's your " << TimeLineTurn << "th turn at tim line." << endl;
+    return true;
   }
-  money -= price;
-  addProperty(b);
 }
 
-int Player::getPos() {
-  return pos;
-}
-
-void Player::setPos(int pos) {
-  // TODO: add other functionality like move to Tims Line
-  this->pos = pos;
-}
-
-char Player::getName() {
-  return name;
-}
-
-bool Player::isRolled() {
-  return rolled;
-}
 
 void Player::addProperty(Building *b) {
   property.emplace_back(b);
+}
+
+void Player::removeProperty(Buidling *b) {
+  property.erase(b);
+}
+
+
+void Player::buyImprovement(Building *b) {
+  if (find(property.begin(), property.end(), b) == property.end()) {
+    cout << "You don't own the building you are mortgaging!" << endl;
+    return;
+  }
+  b->addImprovement();
+}
+
+void Player::sellImprovement(Building *b) {
+  if (find(property.begin(), property.end(), b) == property.end()) {
+    cout << "You don't own the building you are mortgaging!" << endl;
+    return;
+  }
+  b->sellImprovement();
+}
+
+void Player::buyProperty(Building *b) {
+  if (player->money < b->getCost()) {
+    cout << "You don't have enough money!" << endl;
+    return;
+  }
+  addProperty(b);
+  p->addFund(-b->getCost());
 }
 
 void Player::mortgage(Building *b) {
@@ -84,39 +112,24 @@ void Player::mortgage(Building *b) {
     cout << "You don't own the building you are mortgaging!" << endl;
     return;
   }
-  if (b->getMortgage()) {
-    cout << "This building is under mortgage! Try another building!" << endl;
-    return;
-  }
-  if (b->getImprovement() != 0) {
-    cout << "You must sold improvements to mortgage this building!" << endl;
-    return;
-  }
   b->mortgage();
-  addFund(b->getCost() / 2);
-  cout << "You successfully mortagaged this building! Now you have $" << money << endl;
 }
 
-void Player::unMortgage(Building *b) {
-  int price = b->getCost() * 0.6;
-  if (money < price) {
-    cout << "You don't have enough money to unmortgage this buidling! The price is " << price << " and you currently have " << money << endl;
+void Player::unmortgage(Building *b) {
+  if (find(property.begin(), property.end(), b) == property.end()) {
+    cout << "You don't own the building you are unmortgaging!" << endl;
     return;
   }
-  b->unMortgage();
+  b->unmortgage();
 }
 
+// To move on the board for a certain number
+void Player::move(int num){
+  pos += num;
+  pos %= 40;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+// differentiates "sent" to a place and "move" to a place
+void Player::setPos(int pos) {
+  this->pos = pos;
+}
