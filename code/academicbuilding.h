@@ -13,15 +13,19 @@ class AcademicBuilding : public Building {
   std::vector<int> info;
  public:
   AcademicBuilding(BuildingName bn, std::vector<int> info);
+  int getCost() const override;
+  int getWorth() const override;
+  MonopolyBlock getMonopoly();
+  int tuition() const override;
+  Player *getOwner();
   bool AddImprovement(); // return false if already 5 improvements
   bool sellImprovement();
-  virtual int tuition() const override;
-  Player *getOwner();
-  virtual BuildingInfo getInfo() const override;
-  ~AcademicBuidling();
+  int getImprovement();
   bool getMortgage();
   int mortgage();
   int unMortgage();
+  BuildingInfo getInfo() const override;
+  ~AcademicBuilding();
 };
 
 #endif
