@@ -42,6 +42,7 @@
     "xutility": "cpp",
     "chrono": "cpp",
     "ratio": "cpp",
-    "string": "cpp"
+    "string": "cpp",
+    "xtree": "cpp"
   }
 }

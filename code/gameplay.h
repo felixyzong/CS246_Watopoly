@@ -31,8 +31,10 @@ class Gameplay {
   int curTuition;
   int totalRimCup = 0;
   friend class Player;
+  friend class Building;
 
   Player *findPlayer(char c);
+  Building *findBuilding(string name)
  	void dropOut(Player *p);
 	bool checkBankRuptcy(Player *p);
 
@@ -44,8 +46,8 @@ class Gameplay {
   void roll(int die1, int die2); // only availale in test mode
   void switchPlayer();
   void improve(AcademicBuilding *ab, char instruction);
-  void mortage(Building *b);
-  void unmortage(Building *b);
+  void mortgage(Building *b);
+  void unmortgage(Building *b);
   void assets();
   void all();
  public:

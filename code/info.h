@@ -3,6 +3,7 @@
 class Player;
 
 #include <vector>
+#include <map>
 
 struct PlayerInfo {
   char name;
@@ -10,7 +11,7 @@ struct PlayerInfo {
 };
 
 enum class BuildingType { Academic, Residence, Gyms, Nonproperty };
-enum class BuildingName { AL, ML, ECH, PAS, HH, RCH, DWE, CPH, LHI, BMH, OPT, EV1, EV2, EV3, PHYS, B1, B2, EIT, ESC, C2, MC, DC, MKV, UWP, V1, REV, PAC, CIF, CollectOSAP, DCTimsLine, GoToTims, GooseNesting, Tuition, CoopFee, SLC, NeedlesHall}; 
+enum class BuildingName { AL, ML, ECH, PAS, HH, RCH, DWE, CPH, LHI, BMH, OPT, EV1, EV2, EV3, PHYS, B1, B2, EIT, ESC, C2, MC, DC, MKV, UWP, V1, REV, PAC, CIF, CollectOSAP, DCTimsLine, GoToTims, GooseNesting, Tuition, CoopFee, SLC, NeedlesHall, ERROR}; 
 enum class MonopolyBlock { Arts1, Arts2, Eng, Health, Env, Sci1, Sci2, Math };
 
 // BuildingInfo are received by textdisplay for display
@@ -47,6 +48,42 @@ int randomGen(int low, int high, unsigned seed) {
   default_random_engine rng{seed};
   uniform_int_distribution<> distrib(low, high);
   return distrib(rng);
+}
+
+const std::map<std::string, BuildingName> table = {
+  {"AL", BuildingName::AL}, {"ML", BuildingName::ML}, {"ECH", BuildingName::ECH}, {"PAS", BuildingName::PAS},
+  {"HH", BuildingName::HH}, {"RCH", BuildingName::RCH}, {"DWE", BuildingName::DWE}, {"CPH", BuildingName::CPH},
+  {"LHI", BuildingName::LHI}, {"BMH", BuildingName::BMH}, {"OPT", BuildingName::OPT}, {"EV1", BuildingName::EV1},
+  {"EV2", BuildingName::EV2}, {"EV3", BuildingName::EV3}, {"PHYS", BuildingName::PHYS}, {"B1", BuildingName::B1},
+  {"B2", BuildingName::B2}, {"EIT", BuildingName::EIT}, {"ESC", BuildingName::ESC}, {"C2", BuildingName::C2},
+  {"MC", BuildingName::MC}, {"DC", BuildingName::DC}, {"MKV", BuildingName::MKV}, {"UWP", BuildingName::UWP},
+  {"V1", BuildingName::V1}, {"REV", BuildingName::REV}, {"PAC", BuildingName::PAC}, {"CIF", BuildingName::CIF}
+};
+
+// name must be valid string building name
+BuildingName strtobn(std::string name) {
+  auto it = table.find(name);
+  if (it != table.end()) {
+    return it->second;
+  }
+  return BuildingName::ERROR;
+}
+
+std::string bntostr(BuildingName bn) {
+  auto it = table.find(bn);
+  if (it != table.end()) {
+    return it->first;
+  }
+  return "ERROR";
+}
+
+bool isNumeric(std::string const &str)
+{
+    auto it = str.begin();
+    while (it != str.end() && std::isdigit(*it)) {
+        it++;
+    }
+    return !str.empty() && it == str.end();
 }
 
 
