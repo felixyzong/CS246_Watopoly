@@ -28,7 +28,6 @@ class Gameplay {
   Building *curBuilding;
   int curTuition = 0;
   bool isRolled = false;
-  unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
   bool isTest;
   int totalRimCup = 0;
 
@@ -56,7 +55,6 @@ class Gameplay {
   void saveGame(std::string file);
   void loadGame(std::string file);
  public:
-  void setseed(unsigned seed);
   Gameplay(bool test);
   void play();
   ~Gameplay();

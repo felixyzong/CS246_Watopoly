@@ -15,6 +15,7 @@ class Subject {
 template <typename InfoType>
 void Subject<InfoType>::attach(Observer<InfoType> *o) {
   obs.emplace_back(o);
+  o->notify(*this);
 }
 
 template <typename InfoType>

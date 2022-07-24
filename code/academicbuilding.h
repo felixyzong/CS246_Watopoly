@@ -33,9 +33,9 @@ class AcademicBuilding : public Property, public Observer<BuildingInfo>{
   bool sellImprovement();
   int getImprovement() const;
 
-  virtual int tuition(unsigned seed) const override;           // inherit from building
-  virtual int movement(unsigned seed) const override;          // inherit from building
-  virtual BuildingInfo getInfo() const override;  // inherit from subject
+  virtual int tuition() const override;           // inherit from building
+  virtual int movement() const override;          // inherit from building
+  virtual BuildingInfo getInfo() const override;                // inherit from subject
   virtual void notify(Subject<BuildingInfo> &whoFrom) override; // inherit from observer
   virtual void setOwner(Player *p) override;
 
@@ -43,7 +43,7 @@ class AcademicBuilding : public Property, public Observer<BuildingInfo>{
   virtual bool unmortgage() override;
 
   void updateMonopolist();
-  void init();
+  virtual void init() override;
 };
 
 #endif

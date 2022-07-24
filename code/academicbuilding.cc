@@ -35,6 +35,7 @@ bool AcademicBuilding::addImprovement() {
     cout << "You don't have enough money!" << endl;
     return false;
   }
+  cout << "You successfully build an improvement at " << bntostr(getBuildingName()) << endl;
   improvement++;
   owner->addFund(-info[1]);
   notifyObservers();
@@ -56,12 +57,12 @@ bool AcademicBuilding::sellImprovement() {
   return true;
 }
 
-int AcademicBuilding::tuition(unsigned seed) const {
+int AcademicBuilding::tuition() const {
   if (monopolist == owner && owner != nullptr) return info[improvement+2] * 2;
   else return info[improvement+2];
 }
 
-int AcademicBuilding::movement(unsigned seed) const {
+int AcademicBuilding::movement() const {
   return 0;
 }
 

@@ -2,11 +2,12 @@
 #define NONPROPERTYBUILDING_H
 #include "building.h"
 #include "watutils.h"
+#include <iostream>
 class NonPropertyBuilding : public Building {
  public:
   NonPropertyBuilding(BuildingName bn);
-  virtual int tuition(unsigned seed) const override;           // inherit from building
-  virtual int movement(unsigned seed) const override;          // inherit from building
+  virtual int tuition() const override;           // inherit from building
+  virtual int movement() const override;          // inherit from building
   virtual BuildingInfo getInfo() const override;  // inherit from subject
   ~NonPropertyBuilding();
 };

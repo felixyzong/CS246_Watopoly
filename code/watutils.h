@@ -3,11 +3,22 @@
 #define _WATUTILS_H
 
 #include <random>
+#include <chrono>
+// test
+#include <iostream>
+//
 
-inline int randomGen(int low, int high, unsigned seed) {
+
+inline int randomGen(int low, int high) {
+
+  unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
   std::default_random_engine rng{seed};
   std::uniform_int_distribution<> distrib(low, high);
-  return distrib(rng);
+  int r = distrib(rng);
+  // test
+  std::cout << r << " is generated within " << low << " and " << high << std::endl;
+  //
+  return r;
 }
 
 

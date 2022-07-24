@@ -16,11 +16,11 @@ int ResidenceBuilding::getWorth() {
   return 200;
 }
 
-int ResidenceBuilding::tuition(unsigned seed) const {
+int ResidenceBuilding::tuition() const {
   return totalOwns * 50;
 }
 
-int ResidenceBuilding::movement(unsigned seed) const {
+int ResidenceBuilding::movement() const {
   return 0;
 }
 

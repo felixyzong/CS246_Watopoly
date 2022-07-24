@@ -8,11 +8,11 @@ Gameplay::Gameplay(bool test) {
   const int defaultMoney = 1500;
   int playerCount;
   char playerChar;
-  cout << "Please enter the number of players(at lease 6, at most 8):";
+  cout << "Please enter the number of players(at lease 6, at most 8): ";
   cin >> playerCount;
   while (playerCount < 6 || playerCount > 8) {
     cout << "Invalid number of players." << endl;
-    cout << "Please enter the number of players(at lease 6, at most 8):";
+    cout << "Please enter the number of players(at lease 6, at most 8): ";
     cin >> playerCount;
   }
 
@@ -28,16 +28,17 @@ Gameplay::Gameplay(bool test) {
       cout  << " " << name;
     }
     cout << endl;
-    cout << "Player #" << i << ", please enter your avator char:";
+    cout << "Player #" << i+1 << ", please enter your avator char: ";
     cin >> playerChar;
     while (find(availablePlayers.begin(), availablePlayers.end(), playerChar) == availablePlayers.end())
     {
       cout << "Invalid avatar char, please choose from available!" << endl;
-      cout << "Current available avatars: ";
+      cout << "Current available avatars:";
       for (char name : availablePlayers) {
         cout  << " " << name;
       }
-      cout << "Player #" << i << ", please enter your avator char:";
+      cout << endl;
+      cout << "Player #" << i << ", please enter your avator char: ";
       cin >> playerChar;
     }
 
@@ -79,9 +80,11 @@ Building *Gameplay::findBuilding(string name) {
 void Gameplay::switchPlayer() {
   auto it = find(players.begin(), players.end(), curPlayer);
   int index = it - players.begin();
-  if (index != players.size()+1) {
-    index++;
-  } else index = 0;
+  // test
+  cout << index << " is index of curPlayer out of " << players.size() << " players"<< endl;
+  //
+  index++;
+  if (index == players.size()) index = 0;
   curPlayer = players[index];
   curBuilding = b->getBuilding(curPlayer->getPos());
   curTuition = 0;
@@ -110,8 +113,8 @@ bool Gameplay::checkBankRuptcy() {
 // random roll
 void Gameplay::roll() {
   // row two dices
-  int die1 = randomGen(1,6,seed);
-  int die2 = randomGen(1,6,seed);
+  int die1 = randomGen(1,6);
+  int die2 = randomGen(1,6);
   cout << "You rolled out " << die1 << " " << die2 << endl;
   roll(die1,die2);
 }
@@ -129,11 +132,13 @@ void Gameplay::roll(int die1, int die2) {
 
   // move and get curBuilding
   if (curPlayer->getPos() + die1 + die2 >= 40) {
-    // player passed Collect OSAP
+    cout << "You passed Collect OSAP, you gain $200!" << endl;
     curPlayer->addFund(200);
   }
 
+  cout << "You moved from " << bntostr(b->getBuilding(curPlayer->getPos())->getBuildingName()) << " to ";
   curPlayer->move(die1+die2);
+  cout << bntostr(b->getBuilding(curPlayer->getPos())->getBuildingName()) << endl;
   curBuilding = b->getBuilding(curPlayer->getPos());
 
 
@@ -167,9 +172,10 @@ void Gameplay::roll(int die1, int die2) {
           }
           cout << "You bought " << bntostr(curProperty->getBuildingName()) << " successfully!" << endl;
           curPlayer->buyProperty(static_cast<Property *>(curBuilding));
-        
+          break;
         } else if (yn == "no") {
           auction(curProperty);
+          break;
         } else {
           cout << "Invalid command! Please enter yes or no: " ;
         }
@@ -185,8 +191,8 @@ void Gameplay::roll(int die1, int die2) {
       if (curBuilding->getBuildingType() == BuildingType::Gyms) {
         static_cast<GymsBuilding*>(curBuilding)->enterLastRoll(die1+die2);
       } 
-      curTuition = static_cast<Property *>(curBuilding)->tuition(seed);
-      cout << "You need to pay " << curTuition << " tuition to " << owner->getName() << endl;
+      curTuition = static_cast<Property *>(curBuilding)->tuition();
+      cout << "You need to pay $" << curTuition << " tuition to " << owner->getName() << endl;
       while(curPlayer->getMoney() < curTuition) {
         cout << "You don't have enough money! You only have " << curPlayer->getMoney() << endl;
         cout << "You need to raise money!";
@@ -199,8 +205,8 @@ void Gameplay::roll(int die1, int die2) {
 
   } else if ( curBuilding->getBuildingType() == BuildingType::Nonproperty) {
     // if curBuilding is a Nonproperty building, curPlayer react based on specific rules
-    int moveNum = curBuilding->movement(seed);
-    curTuition = curBuilding->tuition(seed);
+    int moveNum = static_cast<NonPropertyBuilding *>(curBuilding)->movement();
+    curTuition = curBuilding->tuition();
     switch(curBuilding->getBuildingName()) {
       case BuildingName::Tuition: {
         cout << "You need to pay $300 or 10%($" << curPlayer->getTotalWorth() / 10 << ") of your total wealth:" << endl;
@@ -224,14 +230,13 @@ void Gameplay::roll(int die1, int die2) {
       }
       case BuildingName::SLC: {
         if (totalRimCup < 4) {
-          int result = randomGen(1, 100, seed);
+          int result = randomGen(1, 100);
           if (result == 100) {
             curPlayer->gainCup();
             totalRimCup += 1;
             cout << "You get a Rim Cup!" << endl;
-          }
+          } else cout << "You didn't win a Rim Cup" << endl;
         }
-        moveNum = static_cast<NonPropertyBuilding *>(curBuilding)->movement(seed);
         if (moveNum == -4) {
           // move to DC Tims Line
           moveNum = 50 - curPlayer->getPos();
@@ -245,23 +250,21 @@ void Gameplay::roll(int die1, int die2) {
       }
       case BuildingName::NeedlesHall:
         if (totalRimCup < 4) {
-          int result = randomGen(1,100,seed);
+          int result = randomGen(1,100);
           if (result == 100) {
             curPlayer->gainCup();
             totalRimCup += 1;
             cout << "You get a Rim Cup!" << endl;
           }
         }
-        curTuition = static_cast<NonPropertyBuilding *>(curBuilding)->tuition(seed);
-        if (curTuition > 0) {
-          cout << "You gain $" << curTuition << "." << endl;
-          curPlayer->addFund(curTuition);
-        } else {
-          cout << "You lose $" << curTuition << "." << endl;\
-          if (curPlayer->getMoney() + curTuition < 0) {
+        curTuition = static_cast<NonPropertyBuilding *>(curBuilding)->tuition();
+        if (curTuition < 0) {
+          curPlayer->addFund(-curTuition);
+        } else if (curTuition > 0) {
+          if (curPlayer->getMoney() < curTuition) {
             curPlayer->addFund(-curPlayer->getMoney());
           }
-          curPlayer->addFund(curTuition);
+          curPlayer->addFund(-curTuition);
         }
         break;
       default:
@@ -276,7 +279,6 @@ void Gameplay::roll(int die1, int die2) {
           curPlayer->addFund(-curTuition);
         }
         if (curTuition < 0) {
-          cout << "Congrats! You get $" << curTuition << "!" << endl;
           curPlayer->addFund(-curTuition);
         }
 
@@ -298,26 +300,18 @@ void Gameplay::roll(int die1, int die2) {
   isRolled = true;
 }
 
-// set game seed
-void Gameplay::setseed(unsigned seed) {
-  this->seed = seed;
-}
-
 
 // reads in action from std::cin
 bool Gameplay::parseAction() {
   cout << "Player "<< curPlayer->getName() << ", please enter command:" << endl;
-  string s;
   string action;
-  getline(cin, s);
-  stringstream ss{s};
-  ss >> action;
+  cin >> action;
   if (action == "roll") {
     if (isRolled) {
       cout << "You have rolled!" << endl;
     } else if (isTest) {
       int dice1, dice2;
-      ss >> dice1 >> dice2;
+      cin >> dice1 >> dice2;
       roll(dice1, dice2);
     } else {
       roll();
@@ -326,29 +320,29 @@ bool Gameplay::parseAction() {
   } else if (action == "next") {
     if (!isRolled) {
       cout << "You haven't rolled!" << endl;
-    } if (curTuition > 0) {
+    } else if (curTuition > 0) {
       cout << "Please pay tuition first!" << endl;
     } else switchPlayer();
 
   } else if (action == "trade") {
     char pn;
     string give, receive;
-    ss >> pn >> give >> receive;
+    cin >> pn >> give >> receive;
     trade(pn, give, receive);
   
   } else if (action == "improve") {
     string bn, instruction;
-    ss >> bn >> instruction;
+    cin >> bn >> instruction;
     improve(bn, instruction);
   
   } else if (action == "mortgage") {
     string bn;
-    ss >> bn;
+    cin >> bn;
     mortgage(bn);
   
   } else if (action == "unmortgage") {
     string bn;
-    ss >> bn;
+    cin >> bn;
     unmortgage(bn);
   
   } else if (action == "all") {
@@ -371,7 +365,7 @@ bool Gameplay::parseAction() {
     }
     
   } else if (action == "help") {
-    cout << "Available commend list:" << endl;
+    cout << "Available command list:" << endl;
 
     if (!isRolled) {
       cout << "roll";
@@ -555,16 +549,16 @@ void Gameplay::auction(Building* bs) {
   int index = find(players.begin(), players.end(), p) - players.begin();
   
   for (int i = index; ; i++) {
-    if (i = players.size()) i = 0;
+    if (i == players.size()) i = 0;
     if (!auctionStatus[i]) continue;
 
-    if (playersCount = 1 && curBid != prop->getCost()-1) {
+    if (playersCount == 1 && curBid != prop->getCost()-1) {
       cout << "Congradulations! Player " << p->getName() << " buys building " << bntostr(bs->getBuildingName()) << " at price of $" << curBid << endl;
       p->addProperty(prop);
       p->addFund(-curBid);
       prop->setOwner(p);
       return;
-    } else if (playersCount = 0 && curBid == prop->getCost()-1) {
+    } else if (playersCount == 0 && curBid == prop->getCost()-1) {
       cout << "No player offers a bid, auction aborts." << endl;
       return;
     } else {
@@ -579,8 +573,8 @@ void Gameplay::auction(Building* bs) {
           int bid = stoi(command);
           if (bid > players[i]->getMoney()) {
             cout << "You don't have enough money!" << endl;
-          } else if (curBid > bid) {
-            cout << "Your bid is less than current highiest bid!" << endl;
+          } else if (curBid >= bid) {
+            cout << "Your bid is less than or equal to current highiest bid!" << endl;
           } else {
             curBid = bid;
             p = players[i];

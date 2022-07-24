@@ -44,6 +44,7 @@
     "ratio": "cpp",
     "string": "cpp",
     "xtree": "cpp",
-    "map": "cpp"
+    "map": "cpp",
+    "sstream": "cpp"
   }
 }

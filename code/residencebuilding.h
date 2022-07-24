@@ -26,15 +26,15 @@ class ResidenceBuilding : public Property, public Observer<BuildingInfo>{
   virtual bool mortgage() override;
   virtual bool unmortgage() override;
  
-  virtual int tuition(unsigned seed) const override;           // inherit from building
-  virtual int movement(unsigned seed) const override;          // inherit from building
+  virtual int tuition() const override;           // inherit from building
+  virtual int movement() const override;          // inherit from building
   virtual BuildingInfo getInfo() const override;  // inherit from subject
   virtual void notify(Subject<BuildingInfo> &whoFrom) override; // inherit from observer
   virtual void setOwner(Player *p) override;
 
 
   void updateTotalOwns();
-  void init();
+  virtual void init() override;
 };
 
 #endif

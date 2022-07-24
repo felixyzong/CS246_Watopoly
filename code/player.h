@@ -3,13 +3,14 @@
 
 
 #include <vector>
+#include "subject.h"
 #include "Property.h"
 #include "academicbuilding.h"
 #include "residencebuilding.h"
 #include "gymsbuilding.h"
 #include "nonpropertybuilding.h"
 
-class Player {
+class Player : Subject<PlayerInfo> {
   int money;
   std::vector<Property *> property;
 
@@ -48,6 +49,8 @@ class Player {
   void move(int num);    // To move on the board for a certain number
   void setPos(int pos); // differentiates "sent" to a place and "move" to a place
   void printAsset();
+
+  PlayerInfo getInfo() const override;
 };
 
 

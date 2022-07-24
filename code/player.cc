@@ -75,16 +75,18 @@ bool Player::incTimTurn() {
 
 void Player::addProperty(Property *b) {
   property.emplace_back(b);
+  b->setOwner(this);
 }
 
 void Player::removeProperty(Property *b) {
   property.erase(find(property.begin(), property.end(), b));
+  b->init();
 }
 
 
 void Player::buyImprovement(Property *b) {
   if (find(property.begin(), property.end(), b) == property.end()) {
-    cout << "You don't own the building you are mortgaging!" << endl;
+    cout << "You don't own the building!" << endl;
     return;
   }
   if (b->getBuildingType() != BuildingType::Academic) {
@@ -96,7 +98,7 @@ void Player::buyImprovement(Property *b) {
 
 void Player::sellImprovement(Property *b) {
   if (find(property.begin(), property.end(), b) == property.end()) {
-    cout << "You don't own the building you are mortgaging!" << endl;
+    cout << "You don't own the building!" << endl;
     return;
   }
   if (b->getBuildingType() != BuildingType::Academic) {
@@ -115,11 +117,12 @@ void Player::buyProperty(Property *b) {
   }
   addProperty(b);
   addFund(-b->getCost());
+  b->setOwner(this);
 }
 
 void Player::mortgage(Property *b) {
   if (find(property.begin(), property.end(), b) == property.end()) {
-    cout << "You don't own the building you are mortgaging!" << endl;
+    cout << "You don't own the building!" << endl;
     return;
   }
   b->mortgage();
@@ -127,7 +130,7 @@ void Player::mortgage(Property *b) {
 
 void Player::unmortgage(Property *b) {
   if (find(property.begin(), property.end(), b) == property.end()) {
-    cout << "You don't own the building you are unmortgaging!" << endl;
+    cout << "You don't own the building!" << endl;
     return;
   }
   b->unmortgage();
@@ -137,11 +140,14 @@ void Player::unmortgage(Property *b) {
 void Player::move(int num){
   pos += num;
   pos %= 40;
+  if (pos < 0) { pos += 40; }
+  notifyObservers();
 }
 
 // differentiates "sent" to a place and "move" to a place
 void Player::setPos(int pos) {
   this->pos = pos;
+  notifyObservers();
 }
 
 void Player::printAsset() {
@@ -150,7 +156,20 @@ void Player::printAsset() {
   cout << "Total Worth: $" << getTotalWorth() << endl;
   cout << "Properties: ";
   for (int i = 0; i < property.size(); i++) {
-    cout << bntostr(property[i]->getBuildingName()) << ", ";
+    cout << bntostr(property[i]->getBuildingName());
+    if (property[i]->getBuildingType() == BuildingType::Academic) {
+      cout << "(" << static_cast<AcademicBuilding *>(property[i])->getImprovement() << ")";
+    }
+    cout << ", ";
   }
   cout << endl;
 }
+
+PlayerInfo Player::getInfo() const {
+  PlayerInfo pi;
+  pi.name = this->name;
+  pi.pos = this->pos;
+  return pi;
+}
+
+

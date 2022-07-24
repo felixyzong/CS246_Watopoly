@@ -47,6 +47,83 @@ Board::Board() {
   buildings.push_back(new AcademicBuilding(BuildingName::MC, MonopolyBlock::Math, MC));
   buildings.push_back(new NonPropertyBuilding(BuildingName::CoopFee));
   buildings.push_back(new AcademicBuilding(BuildingName::DC, MonopolyBlock::Math, DC));
+
+
+  // Monopoly block initiation
+  // Arts1
+  buildings[1]->attach(static_cast<AcademicBuilding *>(buildings[3]));
+  buildings[3]->attach(static_cast<AcademicBuilding *>(buildings[1]));
+
+  // Arts2
+  buildings[6]->attach(static_cast<AcademicBuilding *>(buildings[8]));
+  buildings[6]->attach(static_cast<AcademicBuilding *>(buildings[9]));
+  buildings[8]->attach(static_cast<AcademicBuilding *>(buildings[6]));
+  buildings[8]->attach(static_cast<AcademicBuilding *>(buildings[9]));
+  buildings[9]->attach(static_cast<AcademicBuilding *>(buildings[6]));
+  buildings[9]->attach(static_cast<AcademicBuilding *>(buildings[8]));
+
+  // Eng
+  buildings[11]->attach(static_cast<AcademicBuilding *>(buildings[13]));
+  buildings[11]->attach(static_cast<AcademicBuilding *>(buildings[14]));
+  buildings[13]->attach(static_cast<AcademicBuilding *>(buildings[11]));
+  buildings[13]->attach(static_cast<AcademicBuilding *>(buildings[14]));
+  buildings[14]->attach(static_cast<AcademicBuilding *>(buildings[11]));
+  buildings[14]->attach(static_cast<AcademicBuilding *>(buildings[13]));
+
+  // Health
+  buildings[16]->attach(static_cast<AcademicBuilding *>(buildings[18]));
+  buildings[16]->attach(static_cast<AcademicBuilding *>(buildings[19]));
+  buildings[18]->attach(static_cast<AcademicBuilding *>(buildings[16]));
+  buildings[18]->attach(static_cast<AcademicBuilding *>(buildings[19]));
+  buildings[19]->attach(static_cast<AcademicBuilding *>(buildings[16]));
+  buildings[19]->attach(static_cast<AcademicBuilding *>(buildings[18]));
+
+  // Env
+  buildings[21]->attach(static_cast<AcademicBuilding *>(buildings[23]));
+  buildings[21]->attach(static_cast<AcademicBuilding *>(buildings[24]));
+  buildings[23]->attach(static_cast<AcademicBuilding *>(buildings[21]));
+  buildings[23]->attach(static_cast<AcademicBuilding *>(buildings[24]));
+  buildings[24]->attach(static_cast<AcademicBuilding *>(buildings[21]));
+  buildings[24]->attach(static_cast<AcademicBuilding *>(buildings[23]));
+
+  // Sci1
+  buildings[26]->attach(static_cast<AcademicBuilding *>(buildings[27]));
+  buildings[26]->attach(static_cast<AcademicBuilding *>(buildings[29]));
+  buildings[27]->attach(static_cast<AcademicBuilding *>(buildings[26]));
+  buildings[27]->attach(static_cast<AcademicBuilding *>(buildings[29]));
+  buildings[29]->attach(static_cast<AcademicBuilding *>(buildings[26]));
+  buildings[29]->attach(static_cast<AcademicBuilding *>(buildings[27]));
+
+  // Sci2
+  buildings[31]->attach(static_cast<AcademicBuilding *>(buildings[32]));
+  buildings[31]->attach(static_cast<AcademicBuilding *>(buildings[34]));
+  buildings[32]->attach(static_cast<AcademicBuilding *>(buildings[31]));
+  buildings[32]->attach(static_cast<AcademicBuilding *>(buildings[34]));
+  buildings[34]->attach(static_cast<AcademicBuilding *>(buildings[31]));
+  buildings[34]->attach(static_cast<AcademicBuilding *>(buildings[32]));
+
+  // Math
+  buildings[37]->attach(static_cast<AcademicBuilding *>(buildings[39]));
+  buildings[39]->attach(static_cast<AcademicBuilding *>(buildings[37]));
+
+  // Residence
+  buildings[5]->attach(static_cast<ResidenceBuilding *>(buildings[15]));
+  buildings[5]->attach(static_cast<ResidenceBuilding *>(buildings[25]));
+  buildings[5]->attach(static_cast<ResidenceBuilding *>(buildings[35]));
+  buildings[15]->attach(static_cast<ResidenceBuilding *>(buildings[5]));
+  buildings[15]->attach(static_cast<ResidenceBuilding *>(buildings[25]));
+  buildings[15]->attach(static_cast<ResidenceBuilding *>(buildings[35]));
+  buildings[25]->attach(static_cast<ResidenceBuilding *>(buildings[5]));
+  buildings[25]->attach(static_cast<ResidenceBuilding *>(buildings[15]));
+  buildings[25]->attach(static_cast<ResidenceBuilding *>(buildings[35]));
+  buildings[35]->attach(static_cast<ResidenceBuilding *>(buildings[5]));
+  buildings[35]->attach(static_cast<ResidenceBuilding *>(buildings[15]));
+  buildings[35]->attach(static_cast<ResidenceBuilding *>(buildings[25]));
+
+  // Gyms
+  buildings[12]->attach(static_cast<GymsBuilding *>(buildings[28]));
+  buildings[28]->attach(static_cast<GymsBuilding *>(buildings[12]));
+
 }
 
 Building * Board::getBuilding(int pos) {

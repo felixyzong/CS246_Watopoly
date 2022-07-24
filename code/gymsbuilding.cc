@@ -20,13 +20,13 @@ void GymsBuilding::enterLastRoll(int lastRoll) {
   this->lastRoll = lastRoll;
 }
 
-int GymsBuilding::tuition(unsigned seed) const {
+int GymsBuilding::tuition() const {
   if (totalOwns == 1) return 4*lastRoll;
   else if (totalOwns == 2) return 10*lastRoll;
   else return 0;
 }
 
-int GymsBuilding::movement(unsigned seed) const {
+int GymsBuilding::movement() const {
   return 0;
 }
 
