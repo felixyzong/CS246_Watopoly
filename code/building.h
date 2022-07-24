@@ -19,16 +19,6 @@ class Building : public Subject<BuildingInfo> {
 
   virtual int tuition() const = 0;
   virtual int movement() const = 0;
-  
- public:
-  Building(BuildingType bt, BuildingName bn);
-  BuildingName GetBuildingName() const { return bn; }
-  virtual int getCost() const = 0;
-  virtual int getWorth() const = 0;
-  virtual int tuition() const = 0;
-  BuildingType getBuildingType() const { return bt; }
-  virtual BuildingInfo getInfo() const = 0;
-  virtual ~Building() = default;
 };
 
 #endif
