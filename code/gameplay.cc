@@ -303,6 +303,7 @@ void Gameplay::roll(int die1, int die2) {
 
 // reads in action from std::cin
 bool Gameplay::parseAction() {
+  cout << endl;
   cout << "Player "<< curPlayer->getName() << ", please enter command:" << endl;
   string action;
   cin >> action;
@@ -416,7 +417,7 @@ void Gameplay::trade(char pn, string give, string receive) {
       return;
     }
     int giveMoney = stoi(give);
-    if (giveMoney < curPlayer->getMoney()) {
+    if (giveMoney > curPlayer->getMoney()) {
       cout << "You don't have enough money to give!" << endl;
       return;
     }

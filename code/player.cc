@@ -160,6 +160,9 @@ void Player::printAsset() {
     if (property[i]->getBuildingType() == BuildingType::Academic) {
       cout << "(" << static_cast<AcademicBuilding *>(property[i])->getImprovement() << ")";
     }
+    if (property[i]->getMortgage()) {
+      cout << "(M)";
+    }
     cout << ", ";
   }
   cout << endl;
