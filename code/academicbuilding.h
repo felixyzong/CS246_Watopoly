@@ -7,25 +7,40 @@ class Player;
 
 class AcademicBuilding : public Building {
   MonopolyBlock mb;
-  Player* owner;
-  int improvement;
-  bool mortgage;
+  Player* owner = nullptr;
+  Player* monopolist = nullptr;
+  std::map<BuildingName, Player*> monopoly;
+  int improvement = 0;
+  bool mortgage = 0;
   std::vector<int> info;
  public:
-  AcademicBuilding(BuildingName bn, std::vector<int> info);
-  int getCost() const override;
-  int getWorth() const override;
-  MonopolyBlock getMonopoly();
-  int tuition() const override;
+  AcademicBuilding(BuildingName bn, MonopolyBlock mb, std::vector<int> info);
+  ~AcademicBuilding();
+
   Player *getOwner();
-  bool AddImprovement(); // return false if already 5 improvements
+  void setOwner(Player *p);
+  MonopolyBlock getMonopoly();
+
+  int getCost();
+  int getImprovementCost();
+  int getWorth();
+
+  int tuition() const override;
+  int movement() const override;
+
+  bool addImprovement(); // return false if already 5 improvements
   bool sellImprovement();
   int getImprovement();
+
   bool getMortgage();
-  int mortgage();
-  int unMortgage();
+  void mortgage();
+  void unMortgage();
+
   BuildingInfo getInfo() const override;
-  ~AcademicBuilding();
+  void notify(Subject<BuildingInfo> &whoFrom) override; //inherite from observer
+
+  void updateMonopolist();
+  void init();
 };
 
 #endif
