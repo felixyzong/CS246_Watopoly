@@ -138,10 +138,12 @@ void Gameplay::roll(int die1, int die2) {
     curPlayer->addFund(200);
   }
 
-  cout << "You moved from " << bntostr(b->getBuilding(curPlayer->getPos())->getBuildingName()) << " to ";
+  stringstream ss;
+  ss << "You moved from " << bntostr(b->getBuilding(curPlayer->getPos())->getBuildingName()) << " to ";
   curPlayer->move(die1+die2);
+  ss << bntostr(b->getBuilding(curPlayer->getPos())->getBuildingName()) << endl;
   cout << b;
-  cout << bntostr(b->getBuilding(curPlayer->getPos())->getBuildingName()) << endl;
+  cout << ss;
   curBuilding = b->getBuilding(curPlayer->getPos());
 
 
