@@ -2,7 +2,7 @@
 
 NonPropertyBuilding::NonPropertyBuilding(BuildingName bn): Building{BuildingType::Nonproperty, bn} {}
 
-NonPropertyBuilding::~NonPropertyBuilding() {}
+NonPropertyBuilding::~NonPropertyBuilding(unsigned seed) {}
 
 int NonPropertyBuilding::tuition() const {
   switch(bn) {
@@ -11,7 +11,7 @@ int NonPropertyBuilding::tuition() const {
     case BuildingName::CoopFee:
       return 150;
     case BuildingName::NeedlesHall:
-      int n = randomGen(1,18, std::chrono::system_clock::now().time_since_epoch().count());
+      int n = seed;
       switch (n) {
         case 1:
           return 200;
@@ -34,13 +34,13 @@ int NonPropertyBuilding::tuition() const {
 }
 
 
-int NonPropertyBuilding::movement() const {
+int NonPropertyBuilding::movement(unsigned seed) const {
   switch(bn) {
     case BuildingName::GoToTims:
       // -4 means gototims
       return -4;
     case BuildingName::SLC:
-      int n = randomGen(1,24, std::chrono::system_clock::now().time_since_epoch().count());
+      int n = randomGen(1,24, seed);
       switch(n) {
         case 1: case 2: case 3:
           return -3;

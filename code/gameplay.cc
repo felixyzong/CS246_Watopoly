@@ -266,7 +266,7 @@ void Gameplay::roll(int die1, int die2) {
           curPlayer->addFund(curTuition);
         }
         break;
-      case default:
+      default:
         if (curTuition > 0) {
           cout << "You need to pay $" << curTuition << " to University of Waterloo." << endl;
           while(curPlayer->getMoney() < curTuition) {
