@@ -61,6 +61,13 @@ Building * Board::findBuilding(string name) {
   return nullptr;
 }
 
+void Board::notify(Subject<PlayerInfo> &whoFrom) {
+
+}
+
+void Board::notify(Subject<BuildingInfo> &whoFrom) {
+
+}
 
 Board::~Board() noexcept {
   for (Building * b : buildings) {

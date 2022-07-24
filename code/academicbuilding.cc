@@ -5,7 +5,7 @@
 using namespace std;
 
 AcademicBuilding::AcademicBuilding(BuildingName bn, MonopolyBlock mb, std::vector<int> info):
-  Building{BuildingType::Academic, bn}, owner{nullptr}, mb{mb}, improvement{0}, mtg{false}, info{info} {}
+  Property{BuildingType::Academic, bn}, owner{nullptr}, mb{mb}, improvement{0}, mtg{false}, info{info} {}
 
 AcademicBuilding::~AcademicBuilding() {}
 
@@ -56,12 +56,12 @@ bool AcademicBuilding::sellImprovement() {
   return true;
 }
 
-int AcademicBuilding::tuition() const {
+int AcademicBuilding::tuition(unsigned seed) const {
   if (monopolist == owner && owner != nullptr) return info[improvement+2] * 2;
   else return info[improvement+2];
 }
 
-int AcademicBuilding::movement() const {
+int AcademicBuilding::movement(unsigned seed) const {
   return 0;
 }
 
@@ -139,6 +139,10 @@ void AcademicBuilding::init() {
 }
 
 
-Player * AcademicBuilding::getMonoplist() const {
+Player * AcademicBuilding::getMonopolist() const {
   return monopolist;
+}
+
+int AcademicBuilding::getImprovement() const{
+  return improvement;
 }

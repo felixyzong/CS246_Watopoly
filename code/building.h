@@ -15,10 +15,10 @@ class Building : public Subject<BuildingInfo> {
   virtual BuildingName getBuildingName() const { return bn; }
   virtual BuildingType getBuildingType() const { return bt; }
 
-  virtual BuildingInfo getInfo() const; // inherit from Subject<Info>
+  virtual BuildingInfo getInfo() const = 0; // inherit from Subject<Info>
 
-  virtual int tuition() const; // get tuition that need to be paid if player land on this building
-  virtual int movement() const; // get steps that player need to move if player land on this building
+  virtual int tuition(unsigned seed) const = 0; // get tuition that need to be paid if player land on this building
+  virtual int movement(unsigned seed) const = 0; // get steps that player need to move if player land on this building
 };
 
 inline Building::~Building() {}

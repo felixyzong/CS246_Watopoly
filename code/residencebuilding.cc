@@ -2,7 +2,7 @@
 using namespace std;
 
 ResidenceBuilding::ResidenceBuilding(BuildingName bn):
-  Building{BuildingType::Residence, bn}, owner{nullptr}, totalOwns{0}, mtg{false} {}
+  Property{BuildingType::Residence, bn}, owner{nullptr}, totalOwns{0}, mtg{false} {}
 
 ResidenceBuilding::~ResidenceBuilding() {}
 
@@ -16,11 +16,11 @@ int ResidenceBuilding::getWorth() {
   return 200;
 }
 
-int ResidenceBuilding::tuition() const {
+int ResidenceBuilding::tuition(unsigned seed) const {
   return totalOwns * 50;
 }
 
-int ResidenceBuilding::movement() const {
+int ResidenceBuilding::movement(unsigned seed) const {
   return 0;
 }
 
@@ -83,5 +83,4 @@ void ResidenceBuilding::init() {
   totalOwns = 0;
   mtg = false;
 }
-
 

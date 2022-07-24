@@ -16,7 +16,7 @@
 #include "nonpropertybuilding.h"
 #include "board.h"
 #include "watutils.h"
-
+#include "Property.h"
 /*
 This class will be responsible for interpreting input as instructions. 
 It will keep track of the status of each player, players assigned, etc. 

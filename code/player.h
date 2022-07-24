@@ -3,7 +3,7 @@
 
 
 #include <vector>
-#include "building.h"
+#include "Property.h"
 #include "academicbuilding.h"
 #include "residencebuilding.h"
 #include "gymsbuilding.h"
@@ -11,7 +11,7 @@
 
 class Player {
   int money;
-  std::vector<Building *> property;
+  std::vector<Property *> property;
 
   int cup = 0; // The numebr of Roll Up the Rim Cup
   int TimLineTurn = 0;
@@ -35,14 +35,14 @@ class Player {
   void gainCup();        // Increase the cup by 1
   bool incTimTurn();      // Increase the tim line turn
 
-  void addProperty(Building *b);
-  void removeProperty(Building *b);
-  void buyImprovement(Building *b);
-  void sellImprovement(Building *b);
+  void addProperty(Property *b);
+  void removeProperty(Property *b);
+  void buyImprovement(Property *b);
+  void sellImprovement(Property *b);
 
-  void buyProperty(Building *b);
-  void mortgage(Building *b);
-  void unmortgage(Building *b);
+  void buyProperty(Property *b);
+  void mortgage(Property *b);
+  void unmortgage(Property *b);
   int getTimCups() const;
 
   void move(int num);    // To move on the board for a certain number

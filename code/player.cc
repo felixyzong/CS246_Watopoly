@@ -73,34 +73,42 @@ bool Player::incTimTurn() {
 }
 
 
-void Player::addProperty(Building *b) {
+void Player::addProperty(Property *b) {
   property.emplace_back(b);
 }
 
-void Player::removeProperty(Building *b) {
+void Player::removeProperty(Property *b) {
   property.erase(find(property.begin(), property.end(), b));
 }
 
 
-void Player::buyImprovement(Building *b) {
+void Player::buyImprovement(Property *b) {
   if (find(property.begin(), property.end(), b) == property.end()) {
     cout << "You don't own the building you are mortgaging!" << endl;
     return;
   }
-  b->addImprovement();
+  if (b->getBuildingType() != BuildingType::Academic) {
+    cout << "It's not academic building!" << endl;
+    return;
+  }
+  static_cast<AcademicBuilding *>(b)->addImprovement();
 }
 
-void Player::sellImprovement(Building *b) {
+void Player::sellImprovement(Property *b) {
   if (find(property.begin(), property.end(), b) == property.end()) {
     cout << "You don't own the building you are mortgaging!" << endl;
     return;
   }
-  b->sellImprovement();
+  if (b->getBuildingType() != BuildingType::Academic) {
+    cout << "It's not academic building!" << endl;
+    return;
+  }
+  static_cast<AcademicBuilding *>(b)->sellImprovement();
 }
 
 
 
-void Player::buyProperty(Building *b) {
+void Player::buyProperty(Property *b) {
   if (money < b->getCost()) {
     cout << "You don't have enough money!" << endl;
     return;
@@ -109,7 +117,7 @@ void Player::buyProperty(Building *b) {
   addFund(-b->getCost());
 }
 
-void Player::mortgage(Building *b) {
+void Player::mortgage(Property *b) {
   if (find(property.begin(), property.end(), b) == property.end()) {
     cout << "You don't own the building you are mortgaging!" << endl;
     return;
@@ -117,7 +125,7 @@ void Player::mortgage(Building *b) {
   b->mortgage();
 }
 
-void Player::unmortgage(Building *b) {
+void Player::unmortgage(Property *b) {
   if (find(property.begin(), property.end(), b) == property.end()) {
     cout << "You don't own the building you are unmortgaging!" << endl;
     return;

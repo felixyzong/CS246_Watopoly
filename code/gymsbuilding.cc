@@ -2,7 +2,7 @@
 using namespace std;
 
 GymsBuilding::GymsBuilding(BuildingName bn):
-  Building{BuildingType::Gyms, bn}, owner{nullptr}, totalOwns{0}, mtg{false} {}
+  Property{BuildingType::Gyms, bn}, owner{nullptr}, totalOwns{0}, mtg{false} {}
 
 GymsBuilding::~GymsBuilding() {}
 
@@ -20,13 +20,13 @@ void GymsBuilding::enterLastRoll(int lastRoll) {
   this->lastRoll = lastRoll;
 }
 
-int GymsBuilding::tuition() const {
+int GymsBuilding::tuition(unsigned seed) const {
   if (totalOwns == 1) return 4*lastRoll;
   else if (totalOwns == 2) return 10*lastRoll;
   else return 0;
 }
 
-int GymsBuilding::movement() const {
+int GymsBuilding::movement(unsigned seed) const {
   return 0;
 }
 
@@ -89,5 +89,4 @@ void GymsBuilding::init() {
   totalOwns = 0;
   mtg = false;
 }
-
 

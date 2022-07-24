@@ -139,20 +139,18 @@ void Gameplay::roll(int die1, int die2) {
 
   if (curBuilding->getBuildingType() != BuildingType::Nonproperty) {
     // if curBuilding is a property building
-    if (curBuilding->getBuildingType() == BuildingType::Gyms) {curBuilding = static_cast<GymsBuilding *>(curBuilding);}
-    else if (curBuilding->getBuildingType() == BuildingType::Academic) {curBuilding = static_cast<AcademicBuilding *>(curBuilding);}
-    else {curBuilding = static_cast<ResidenceBuilding *>(curBuilding);}
+    Property *curProperty = static_cast<Property *>(curBuilding);
 
-    Player *owner = curBuilding->getOwner();
+    Player *owner = curProperty->getOwner();
 
     if ( !owner ) {
       // if the building has no owner, curPlayer buys it or auction starts
-      cout << bntostr(curBuilding->getBuildingName()) << " has no owner, do you want to buy it at a price of $" << curBuilding->getCost() << "?" << endl;
+      cout << bntostr(curProperty->getBuildingName()) << " has no owner, do you want to buy it at a price of $" << curProperty->getCost() << "?" << endl;
       cout << "Please enter yes or no: ";
       string yn;
       while (cin >> yn) {
         if (yn == "yes") {
-          while(curPlayer->getMoney() < curBuilding->getCost()) {
+          while(curPlayer->getMoney() < curProperty->getCost()) {
             cout << "You don't have enough money! You only have " << curPlayer->getMoney() << endl;
             cout << "Would you like to trade/sell property/improvements? Please enter yes or no: ";
             string command;
@@ -161,25 +159,25 @@ void Gameplay::roll(int die1, int die2) {
                 parseAction();
                 break;
               } else if (yn == "no") {
-                auction(curBuilding);
+                auction(curProperty);
                 isRolled = true;
                 return;
               }
             }
           }
-          cout << "You bought " << bntostr(curBuilding->getBuildingName()) << " successfully!" << endl;
-          curPlayer->buyProperty(curBuilding);
+          cout << "You bought " << bntostr(curProperty->getBuildingName()) << " successfully!" << endl;
+          curPlayer->buyProperty(static_cast<Property *>(curBuilding));
         
         } else if (yn == "no") {
-          auction(curBuilding);
+          auction(curProperty);
         } else {
           cout << "Invalid command! Please enter yes or no: " ;
         }
       }
 
-    } else if ( curBuilding->getBuildingType() == BuildingType::Academic && curBuilding->getMonopolist() == curPlayer && curBuilding->getImprovement() < 5) {
+    } else if ( curBuilding->getBuildingType() == BuildingType::Academic && static_cast<AcademicBuilding*>(curBuilding)->getMonopolist() == curPlayer && static_cast<AcademicBuilding*>(curBuilding)->getImprovement() < 5) {
       // if curPlayer own the academic building and monopoly available
-      cout << "Improvement available at" << bntostr(curBuilding->getBuildingName()) << endl;
+      cout << "Improvement available at" << bntostr(static_cast<AcademicBuilding*>(curBuilding)->getBuildingName()) << endl;
 
     } else if (owner != curPlayer) {
       // if building is not owned by curPlayer, curPlayer need to pay tuition
@@ -187,7 +185,7 @@ void Gameplay::roll(int die1, int die2) {
       if (curBuilding->getBuildingType() == BuildingType::Gyms) {
         static_cast<GymsBuilding*>(curBuilding)->enterLastRoll(die1+die2);
       } 
-      curTuition = curBuilding->getTuition();
+      curTuition = static_cast<Property *>(curBuilding)->tuition(seed);
       cout << "You need to pay " << curTuition << " tuition to " << owner->getName() << endl;
       while(curPlayer->getMoney() < curTuition) {
         cout << "You don't have enough money! You only have " << curPlayer->getMoney() << endl;
@@ -201,8 +199,8 @@ void Gameplay::roll(int die1, int die2) {
 
   } else if ( curBuilding->getBuildingType() == BuildingType::Nonproperty) {
     // if curBuilding is a Nonproperty building, curPlayer react based on specific rules
-    int moveNum = curBuilding->movement();
-    curTuition = curBuilding->tuition();
+    int moveNum = curBuilding->movement(seed);
+    curTuition = curBuilding->tuition(seed);
     switch(curBuilding->getBuildingName()) {
       case BuildingName::Tuition: {
         cout << "You need to pay $300 or 10%($" << curPlayer->getTotalWorth() / 10 << ") of your total wealth:" << endl;
@@ -434,8 +432,14 @@ void Gameplay::trade(char pn, string give, string receive) {
       cout << receive << " is not a valid building name!" << endl;
       return;
     }
-    if (receiveBuilding->getOwner() != tradePlayer) {
-      cout << bntostr(receiveBuilding->getBuildingName()) << " is not owned by " << tradePlayer->getName() << "!" << endl;
+    if (receiveBuilding->getBuildingType() == BuildingType::Nonproperty) {
+      cout << "It isn't a property!" << endl;
+      return;
+    }
+    Property *receiveProp = static_cast<Property *>(receiveBuilding);
+
+    if (receiveProp->getOwner() != tradePlayer) {
+      cout << bntostr(receiveProp->getBuildingName()) << " is not owned by " << tradePlayer->getName() << "!" << endl;
       return;
     }
     
@@ -444,11 +448,11 @@ void Gameplay::trade(char pn, string give, string receive) {
     while (cin >> command) {
       if (command == "accept") {
         cout << "Trade accepted!" << endl;
-        curPlayer->addProperty(receiveBuilding);
+        curPlayer->addProperty(receiveProp);
         curPlayer->addFund(-giveMoney);
-        tradePlayer->removeProperty(receiveBuilding);
+        tradePlayer->removeProperty(receiveProp);
         tradePlayer->addFund(giveMoney);
-        receiveBuilding->setOwner(curPlayer);
+        receiveProp->setOwner(curPlayer);
         break;
       } else if (command == "reject") {
         cout << "Trade rejected!" << endl;
@@ -463,8 +467,13 @@ void Gameplay::trade(char pn, string give, string receive) {
       cout << give << " is not a valid building name!" << endl;
       return;
     }
-    if (giveBuilding->getOwner() != curPlayer) {
-      cout << bntostr(giveBuilding->getBuildingName()) << " is not owned by " << curPlayer->getName() << "!" << endl;
+    if (giveBuilding->getBuildingType() == BuildingType::Nonproperty) {
+      cout << "It's not a property!" << endl;
+      return;
+    }
+    Property *giveProp = static_cast<Property *>(giveBuilding);
+    if (giveProp->getOwner() != curPlayer) {
+      cout << bntostr(giveProp->getBuildingName()) << " is not owned by " << curPlayer->getName() << "!" << endl;
       return;
     }
 
@@ -479,11 +488,11 @@ void Gameplay::trade(char pn, string give, string receive) {
       while (cin >> command) {
         if (command == "accept") {
           cout << "Trade accepted!" << endl;
-          curPlayer->removeProperty(giveBuilding);
+          curPlayer->removeProperty(giveProp);
           curPlayer->addFund(receiveMoney);
-          tradePlayer->addProperty(giveBuilding);
+          tradePlayer->addProperty(giveProp);
           tradePlayer->addFund(receiveMoney);
-          giveBuilding->setOwner(tradePlayer);
+          giveProp->setOwner(tradePlayer);
           break;
         } else if (command == "reject") {
           cout << "Trade rejected!" << endl;
@@ -498,8 +507,13 @@ void Gameplay::trade(char pn, string give, string receive) {
         cout << receive << " is not a valid building name!" << endl;
         return;
       }
-      if (receiveBuilding->getOwner() != tradePlayer) {
-        cout << bntostr(receiveBuilding->getBuildingName()) << " is not owned by " << tradePlayer->getName() << "!" << endl;
+      if (receiveBuilding->getBuildingType() == BuildingType::Nonproperty) {
+        cout << "It isn't a property!" << endl;
+        return;
+      }
+      Property *receiveProp = static_cast<Property *>(receiveBuilding);
+      if (receiveProp->getOwner() != tradePlayer) {
+        cout << bntostr(receiveProp->getBuildingName()) << " is not owned by " << tradePlayer->getName() << "!" << endl;
         return;
       }
       cout << "Player " << tradePlayer->getName() << ", please accept or reject the trade: ";
@@ -507,12 +521,12 @@ void Gameplay::trade(char pn, string give, string receive) {
       while (cin >> command) {
         if (command == "accept") {
           cout << "Trade accepted!" << endl;
-          curPlayer->addProperty(receiveBuilding);
-          curPlayer->removeProperty(giveBuilding);
-          tradePlayer->removeProperty(receiveBuilding);
-          tradePlayer->addProperty(giveBuilding);
-          receiveBuilding->setOwner(curPlayer);
-          giveBuilding->setOwner(tradePlayer);
+          curPlayer->addProperty(receiveProp);
+          curPlayer->removeProperty(giveProp);
+          tradePlayer->removeProperty(receiveProp);
+          tradePlayer->addProperty(giveProp);
+          receiveProp->setOwner(curPlayer);
+          giveProp->setOwner(tradePlayer);
           break;
         } else if (command == "reject") {
           cout << "Trade rejected!" << endl;
@@ -529,8 +543,9 @@ void Gameplay::trade(char pn, string give, string receive) {
 
 // Auction program
 void Gameplay::auction(Building* bs) {
+  Property *prop = static_cast<Property *>(bs);
   cout << "Auction of building " << bntostr(bs->getBuildingName()) << " starts!" << endl;
-  int curBid = bs->getCost()-1; // base bid
+  int curBid = prop->getCost()-1; // base bid
   int playersCount = players.size();
   std::vector<bool> auctionStatus(playersCount);
   for (int i = 0; i < playersCount; i++) {
@@ -543,13 +558,13 @@ void Gameplay::auction(Building* bs) {
     if (i = players.size()) i = 0;
     if (!auctionStatus[i]) continue;
 
-    if (playersCount = 1 && curBid != bs->getCost()-1) {
+    if (playersCount = 1 && curBid != prop->getCost()-1) {
       cout << "Congradulations! Player " << p->getName() << " buys building " << bntostr(bs->getBuildingName()) << " at price of $" << curBid << endl;
-      p->addProperty(bs);
+      p->addProperty(prop);
       p->addFund(-curBid);
-      bs->setOwner(p);
+      prop->setOwner(p);
       return;
-    } else if (playersCount = 0 && curBid == bs->getCost()-1) {
+    } else if (playersCount = 0 && curBid == prop->getCost()-1) {
       cout << "No player offers a bid, auction aborts." << endl;
       return;
     } else {
@@ -589,9 +604,9 @@ void Gameplay::improve(string bn, string instruction) {
   } else if (bs->getBuildingType() != BuildingType::Academic) {
     cout << bn << " is not an academic building!" << endl;
   } else if (instruction == "buy") {
-    curPlayer->buyImprovement(bs);
+    curPlayer->buyImprovement(static_cast<Property *>(bs));
   } else if (instruction == "sell") {
-    curPlayer->sellImprovement(bs);
+    curPlayer->sellImprovement(static_cast<Property *>(bs));
   } else {
     cout << "Invalid command, please enter buy/sell for instruction!" << endl;
   }
@@ -606,9 +621,8 @@ void Gameplay::mortgage(string bn) {
 
   } else if (bs->getBuildingType() != BuildingType::Academic) {
     cout << bn << " is not an academic building!" << endl;
-
   } else {
-    curPlayer->mortgage(bs);
+    curPlayer->mortgage(static_cast<Property *>(bs));
   }
 }
 
@@ -624,7 +638,7 @@ void Gameplay::unmortgage(string bn) {
     cout << bn << " is not an academic building!" << endl;
 
   } else {
-    curPlayer->unmortgage(bs);
+    curPlayer->unmortgage(static_cast<Property *>(bs));
   }
 }
 
@@ -670,18 +684,18 @@ void Gameplay::saveGame(string save_name){
   for (int i = 0; i < 40; i++) {
     Building *bs = b->getBuilding(i);
     if (bs->getBuildingType() == BuildingType::Nonproperty) continue;
-    saving << bntostr(bs->getBuildingName()) << " ";
-    if (bs->getOwner() == nullptr) saving << "BANK ";
-    else saving << bs->getOwner()->getName() << " ";
-    if (bs->getBuildingType() == BuildingType::Gyms || bs->getBuildingType() == BuildingType::Residence ) {
+    Property *prop = static_cast<Property *>(bs);
+    saving << bntostr(prop->getBuildingName()) << " ";
+    if (prop->getOwner() == nullptr) saving << "BANK ";
+    else saving << prop->getOwner()->getName() << " ";
+    if (prop->getMortgage()) {
+      saving << -1 << endl;
+    }
+    else if (prop->getBuildingType() == BuildingType::Gyms || prop->getBuildingType() == BuildingType::Residence ) {
       saving << 0 << endl;
     }
     else {
-      if (bs->getMortgage()) {
-        saving << -1 << endl;
-      } else {
-        saving << bs->getImprovement() << endl;
-      }
+        saving << static_cast<AcademicBuilding *>(bs)->getImprovement() << endl;
     }
   }
 

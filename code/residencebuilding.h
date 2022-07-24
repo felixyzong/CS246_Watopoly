@@ -7,8 +7,9 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include "Property.h"
 
-class ResidenceBuilding : public Building, public Observer<BuildingInfo>{
+class ResidenceBuilding : public Property, public Observer<BuildingInfo>{
   Player* owner;
   int totalOwns;
   std::map<BuildingName,Player*> monopoly;
@@ -18,20 +19,19 @@ class ResidenceBuilding : public Building, public Observer<BuildingInfo>{
   ResidenceBuilding(BuildingName bn);
   ~ResidenceBuilding();
 
-  Player *getOwner();
-  int getCost();
-  bool getMortgage();
-
-  int getWorth();
+  virtual Player *getOwner() override;
+  virtual int getCost() override;
+  virtual bool getMortgage() override;
+  virtual int getWorth() override;
+  virtual bool mortgage() override;
+  virtual bool unmortgage() override;
  
-  virtual int tuition() const;           // inherit from building
-  virtual int movement() const;          // inherit from building
+  virtual int tuition(unsigned seed) const override;           // inherit from building
+  virtual int movement(unsigned seed) const override;          // inherit from building
   virtual BuildingInfo getInfo() const override;  // inherit from subject
   virtual void notify(Subject<BuildingInfo> &whoFrom) override; // inherit from observer
-  virtual void setOwner(Player *p);
+  virtual void setOwner(Player *p) override;
 
-  bool mortgage();
-  bool unmortgage();
 
   void updateTotalOwns();
   void init();
