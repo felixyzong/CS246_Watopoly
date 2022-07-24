@@ -83,7 +83,7 @@ void Gameplay::switchPlayer() {
   auto it = find(players.begin(), players.end(), curPlayer);
   int index = it - players.begin();
   // test
-  cout << index << " is index of curPlayer out of " << players.size() << " players"<< endl;
+  // cout << index << " is index of curPlayer out of " << players.size() << " players"<< endl;
   //
   index++;
   if (index == players.size()) index = 0;
@@ -143,7 +143,8 @@ void Gameplay::roll(int die1, int die2) {
   curPlayer->move(die1+die2);
   ss << bntostr(b->getBuilding(curPlayer->getPos())->getBuildingName()) << endl;
   cout << b;
-  cout << ss;
+  string s = ss.str();
+  cout << s;
   curBuilding = b->getBuilding(curPlayer->getPos());
 
 

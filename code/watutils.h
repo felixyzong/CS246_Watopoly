@@ -16,7 +16,7 @@ inline int randomGen(int low, int high) {
   std::uniform_int_distribution<> distrib(low, high);
   int r = distrib(rng);
   // test
-  std::cout << r << " is generated within " << low << " and " << high << std::endl;
+  // std::cout << r << " is generated within " << low << " and " << high << std::endl;
   //
   return r;
 }
