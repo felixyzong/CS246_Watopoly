@@ -6,6 +6,8 @@ class Board;
 #include <vector>
 #include <map>
 
+class Player;
+
 struct PlayerInfo {
   char name;
   int pos;
@@ -58,7 +60,10 @@ const std::map<std::string, BuildingName> table = {
   {"EV2", BuildingName::EV2}, {"EV3", BuildingName::EV3}, {"PHYS", BuildingName::PHYS}, {"B1", BuildingName::B1},
   {"B2", BuildingName::B2}, {"EIT", BuildingName::EIT}, {"ESC", BuildingName::ESC}, {"C2", BuildingName::C2},
   {"MC", BuildingName::MC}, {"DC", BuildingName::DC}, {"MKV", BuildingName::MKV}, {"UWP", BuildingName::UWP},
-  {"V1", BuildingName::V1}, {"REV", BuildingName::REV}, {"PAC", BuildingName::PAC}, {"CIF", BuildingName::CIF}
+  {"V1", BuildingName::V1}, {"REV", BuildingName::REV}, {"PAC", BuildingName::PAC}, {"CIF", BuildingName::CIF},
+  {"CollectOSAP", BuildingName::CollectOSAP}, {"DCTimsLine", BuildingName::DCTimsLine}, {"GoToTims", BuildingName::DCTimsLine},
+  {"GooseNesting", BuildingName::GooseNesting}, {"Tuition", BuildingName::Tuition}, {"CoopFee", BuildingName::CoopFee},
+  {"SLC", BuildingName::SLC}, {"NeedlesHall", BuildingName::NeedlesHall}, {"ERROR", BuildingName::ERROR}
 };
 
 // name must be valid string building name

@@ -4,70 +4,29 @@
 #include "building.h"
 using namespace std;
 
-AcademicBuilding::AcademicBuilding(BuildingName bn, vector<int> info) : bn{bn}, info{info} {}
+AcademicBuilding::AcademicBuilding(BuildingName bn, MonopolyBlock mb, std::vector<int> info):
+  Building{BuildingType::Academic, bn}, owner{nullptr}, mb{mb}, improvement{0}, mtg{false}, info{info} {}
 
-AcademicBuilding::~AcademicBuilding() {
-  owner.clear;
-  monopolist.clear;
-  monopoly.clear;
-  info.clear;
-}
+AcademicBuilding::~AcademicBuidling() {}
 
-Player * AcademicBuilding::getowner() {
-  return owner;
-}
+Player *AcademicBuilding::getOwner() { return owner; }
 
-void AcademicBuilding::setOwner(Player *p) {
-  owner = p;
-}
+int AcademicBuilding::getCost() { return info[0]; }
 
-MonopolyBlock AcademicBuilding::getMonopoly() {
-  if (bn ==  BuildingName::AL || bn == BuildingName::ML) {
-    mb = MonopolyBlock::Arts1;
-  } else if (bn == BuildingName::ECH || bn == BuildingName::PAS || bn == BuildingName::HH) {
-    mb = MonopolyBlock::Arts2;
-  } else if (bn == BuildingName::RCH || bn == BuildingName::DWE || bn == BuildingName::CPH) {
-    mb = MonopolyBlock::Eng;
-  } else if (bn == BuildingName::LHI || bn == BuildingName::BMH || bn == BuildingName::OPT) {
-    mb = MonopolyBlock::Health;
-  } else if (bn == BuildingName::EV1 || bn == BuildingName::EV2 || bn == BuildingName::EV3) {
-    mb = MonopolyBlock::Env;
-  } else if (bn == BuildingName::PHYS || bn == BuildingName::B1 || bn == BuildingName::B2) {
-    mb = MonopolyBlock::Sci1;
-  } else if (bn == BuildingName::EIT || bn == BuildingName::ESC || bn == BuildingName::C2) {
-    mb = MonopolyBlock::Sci2;
-  } else if (bn == BuildingName::MC || bn == BuildingName::DC) {
-    mb = MonopolyBlock::Math;
-  } 
-  return mb;
-}
+int AcademicBuilding::getImprovementCost() { return info[1]; }
 
-int AcademicBuilding::getCost() {
-  return info[0];
-}
-
-int AcademicBuilding::getImprovementCost() {
-  return info[1];
-}
+bool AcademicBuilding::getMortgage() { return mtg; }
 
 int AcademicBuilding::getWorth() {
-  return 0.5 * (info[0] + (info[1] * improvement));
+  return info[0] + improvement * info[1];
 }
 
-
-int AcademicBuilding::tuition() {
-  if (monopolist != nullptr && improvement == 0) {
-    return 2* info[2];
-  } else {
-    return info[improvement+2];
-  }
-}
-
-int AcademicBuilding::movement() {
-  return 0;
-}
 
 bool AcademicBuilding::addImprovement() {
+  if (monopolist != owner) {
+    cout << "You don't own all buildings from this monopoly block!" << endl;
+    return false;
+  }
   if (improvement == 5) {
     cout << "There are already 5 improvements, you can't add more!" << endl;
     return false;
@@ -78,52 +37,103 @@ bool AcademicBuilding::addImprovement() {
   }
   improvement++;
   owner->addFund(-info[1]);
+  notifyObservers();
   return true;
 }
 
 bool AcademicBuilding::sellImprovement() {
-  if (improvement == 0) {
+  if (monopolist != owner) {
+    cout << "You don't own all buildings from this monopoly block!" << endl;
+    return false;
+  }
+  if (this->improvement == 0) {
     cout << "There is no improvement at this building, you can't sell!" << endl;
     return false;
   }
   improvement--;
   owner->addFund(info[1] / 2);
+  notifyObservers();
   return true;
 }
 
-int AcademicBuilding::getImprovement() {
-  return improvement;
+int AcademicBuilding::tuition() const {
+  if (monopolist == owner && owner != nullptr) return info[improvement+2] * 2;
+  else return info[improvement+2];
 }
 
-bool AcademicBuilding::getMortgage() {
-  return mortgage;
+int AcademicBuilding::movement() const {
+  return 0;
 }
 
-void AcademicBuilding::mortgage() {
-  owner->addFund(0.5 * (info[0] + (info[1] * improvement)));
-  improvement = 0;
-  mortgage = 1;
-}
-
-void AcademicBuilding::unMortgage() {
-  owner->addFund(-0.6 * info[0]);
-  mortgage = 0;
-} 
-
-
-BuildingInfo AcademicBuilding::getInfo() {
+BuildingInfo AcademicBuilding::getInfo() const {
   BuildingInfo bi;
-  bi.bn = bn;
-  bi.owner = owner;
-  bi.improvement = improvement;
+  bi.bn = this->bn;
+  bi.improvement = this->improvement;
+  bi.owner = this->owner;
   return bi;
 }
 
-void AcademicBuilding::notify(Subject<BuildingInfo> &whoFrom) {
+void AcademicBuilding::notify(Subject<BuildInfo> &whoFrom) {
+  BuildingInfo bi = whoFrom.getInfo();
+  auto it = monopoly.find(bi.bn);
+  if (it == monopoly.end()) {
+    monopoly.insert(std::pair<BuildingName,Player*>(bi.bn,bi.owner));
+    return;
+  }
+  it->second = bi.owner;
+  if (owner != nullptr) updateMonopolist();
+}
+
+
+void AcademicBuilding::setOwner(Player *p) {
+  owner = p;
+  updateMonopolist();
+  notifyObservers();
+}
+
+bool AcademicBuilding::mortgage() {
+  if (mtg == true) {
+    cout << "This building is already mortgaged!" << endl;
+    return false;
+  }
+  if (improvement != 0) {
+    cout << "You need sell all improvement first!" << endl;
+    return false;
+  }
+  mortgage = true;
+  owner->addFund(getCost()/2);
+  return true;
+}
+
+bool AcademicBuilding::unmortgage() {
+  if (mtg == false) {
+    cout << "This building is not mortgaged!" << endl;
+    return false;
+  }
+  if (getCost()*10/6 > owner->getMoney()) {
+    cout << "You don't have enough money!" << endl;
+    return false;
+  }
+  mortgage = false;
+  owner->addFund(-getCost()*10/6);
+  return true;
 }
 
 void AcademicBuilding::updateMonopolist() {
-  if (monopoly->Player)
+  bool monopolyStatus = true;
+  for (auto it = monopoly.begin(); it!= monopoly.end(); ++it) {
+    if (it.second != owner) {
+      monopolyStatus = false;
+      monopolist = nullptr;
+      break;
+    }
+  }
+  if (monopolyStatus == true) monopolist = owner;
 }
+
 void AcademicBuilding::init() {
+  owner = nullptr;
+  monopolist = nullptr;
+  improvement = 0;
+  mtg = false;
 }

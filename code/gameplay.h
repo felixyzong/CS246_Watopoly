@@ -20,22 +20,24 @@ This class will be responsible for interpreting input as instructions.
 It will keep track of the status of each player, players assigned, etc. 
 */
 class Gameplay {
-    Board* b;
+  Board* b;
 	std::vector<Player *> players;
-	std::vector<char> availablePlayers;
 	Player *curPlayer;
   Building *curBuilding;
+  int curTuition = 0;
+  bool isRolled = false;
   unsigned seed = chrono::system_clock::now().time_since_epoch().count();
   bool isTest;
-  int curTuition;
   int totalRimCup = 0;
+
+
   friend class Player;
   friend class Building;
 
   Player *findPlayer(char c);
   Building *findBuilding(string name)
- 	void dropOut(Player *p);
-	bool checkBankRuptcy(Player *p);
+ 	void dropOut();
+	bool checkBankRuptcy();
 
 	void auction(Building *b); // begin an auction on building b, input for a single player will be like [num]/W. "W" means withdraw
 
@@ -49,12 +51,12 @@ class Gameplay {
   void unmortgage(Building *b);
   void assets();
   void all();
+  void saveGame();
+  void loadGame(std::string file);
  public:
   void setseed(unsigned seed);
   Gameplay(bool test);
   void play();
-  void saveGame();
-  void loadGame(std::string file);
   ~Gameplay();
   friend std::ostream &operator<<(std::ostream& out, Gameplay* gp);
 }

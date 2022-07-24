@@ -1,21 +1,44 @@
 #ifndef GYMSBUILDING_H
 #define GYMSBUILDING_H
 #include "building.h"
+#include "player.h"
+#include "info.h"
+#include <iostream>
+#include <vector>
+#include <map>
 
-class Player;
-
-class GymsBuilding : public Building {
+class GymsBuilding : public Building, public Observer<BuildingInfo>{
   Player* owner;
-  bool mortgage;
+  int totalOwns;
+  std::map<BuildingName,Player*> monopoly;
+  int lastRoll;
+  bool mtg;
+
  public:
   GymsBuilding(BuildingName bn);
-  virtual int tuition() const override;
-  Player* getOwner();
-  virtual BuildingInfo getInfo() const override;
-  ~GymsBuilding();
+  ~GymsBuidling();
+
+  Player *getOwner();
+  int getCost();
   bool getMortgage();
-  int mortgage();
-  int unmortgage();
+
+  int getWorth();
+
+  // call enterLastRoll before call tuition() of a gym building
+  void enterLastRoll(int lastRoll);
+
+  virtual int tuition() const override;           // inherit from building
+  virtual int movement() const override;          // inherit from building
+  virtual BuildingInfo getInfo() const override;  // inherit from subject
+  virtual void notify(Subject<BuildingInfo> &whoFrom) override; // inherit from observer
+
+  void setOwner(Player *p);
+
+  bool mortgage();
+  bool unmortgage();
+
+  void updateTotalOwns();
+  void init();
 };
 
 #endif

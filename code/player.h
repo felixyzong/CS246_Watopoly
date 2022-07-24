@@ -10,35 +10,42 @@
 #include "nonpropertybuilding.h"
 
 class Player {
-  long money;
+  int money;
   std::vector<Building *> property;
-  // ...
-  int cup; // The numebr of Roll Up the Rim Cup
+
+  int cup = 0; // The numebr of Roll Up the Rim Cup
   int TimLineTurn = 0;
   bool isInTimLine = false;
   int pos = 0;
   char name;
-  bool rolled = false;
  public:
-  Player(long money, char name);
-  void addFund(int num); // To increase the money for a certain number
-  int getTotalWorth();   // get the total wealth
-  int rollDice(unsigned seed);        // get a random number
-  void move(int num);    // To move on the board for a certain number
-  void gainCup();        // Increase the cup by 1
-  int getTimTurn();      // Get the number of turn the player is stuck at time line
-  int incTimTurn();      // Increase the tim line turn
-  bool isInTim();
-  void buyProperty(Building *b);
-  int getPos();
-  void setPos(int pos); // differentiates "sent" to a place and "move" to a place
+  Player(int money, char name);
+
   char getName();
-  bool isRolled();
+  int getMoney();
+  int getPos();
+  int getTimTurn();      // Get the number of turn the player is stuck at time line
+  int getCup();
+  bool isInTim();
+
+  int getTotalWorth();   // get the total wealth
+
+  void addFund(int num); // To increase the money for a certain number
+  
+  void gainCup();        // Increase the cup by 1
+  bool incTimTurn();      // Increase the tim line turn
+
   void addProperty(Building *b);
   void removeProperty(Building *b);
   void buyImprovement(Building *b);
+  void sellImprovement(Building *b);
+
+  void buyProperty(Building *b);
   void mortgage(Building *b);
-  void unMortgage(Building *b);
+  void unmortgage(Building *b);
+
+  void move(int num);    // To move on the board for a certain number
+  void setPos(int pos); // differentiates "sent" to a place and "move" to a place
 };
 
 
