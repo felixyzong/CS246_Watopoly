@@ -4,7 +4,7 @@ using namespace std;
 GymsBuilding::GymsBuilding(BuildingName bn):
   Building{BuildingType::Gyms, bn}, owner{nullptr}, totalOwns{0}, mtg{false} {}
 
-GymsBuilding::~GymsBuidling() {}
+GymsBuilding::~GymsBuilding() {}
 
 Player *GymsBuilding::getOwner() { return owner; }
 
@@ -32,13 +32,13 @@ int GymsBuilding::movement() const {
 
 BuildingInfo GymsBuilding::getInfo() const {
   BuildingInfo bi;
-  bi.bn = this->bn;
+  bi.bn = getBuildingName();
   bi.improvement = -1;
   bi.owner = this->owner;
   return bi;
 }
 
-void GymsBuilding::notify(Subject<BuildInfo> &whoFrom) {
+void GymsBuilding::notify(Subject<BuildingInfo> &whoFrom) {
   BuildingInfo bi = whoFrom.getInfo();
   auto it = monopoly.find(bi.bn);
   if (it == monopoly.end()) {
@@ -57,21 +57,21 @@ void GymsBuilding::setOwner(Player *p) {
 }
 
 bool GymsBuilding::mortgage() {
-  if (mtg == true) {
+  if (mtg) {
     cout << "This building is already mortgaged!" << endl;
     return false;
   }
-  mortgage = true;
+  mtg = true;
   owner->addFund(getCost()/2);
   return true;
 }
 
 bool GymsBuilding::unmortgage() {
-  if (mtg == false) {
+  if (!mtg) {
     cout << "This building is not mortgaged!" << endl;
     return false;
   }
-  mortgage = false;
+  mtg = false;
   owner->addFund(-getCost()*10/6);
   return true;
 }
@@ -79,8 +79,8 @@ bool GymsBuilding::unmortgage() {
 
 void GymsBuilding::updateTotalOwns() {
   totalOwns = 1;
-  for (it = monopoly.begin(); it!= monopoly.end(); ++it) {
-    if (it.second == owner) totalOwns++;
+  for (auto it = monopoly.begin(); it!= monopoly.end(); ++it) {
+    if (it->second == owner) totalOwns++;
   }
 }
 

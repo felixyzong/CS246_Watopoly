@@ -16,7 +16,7 @@ class GymsBuilding : public Building, public Observer<BuildingInfo>{
 
  public:
   GymsBuilding(BuildingName bn);
-  ~GymsBuidling();
+  ~GymsBuilding();
 
   Player *getOwner();
   int getCost();
@@ -27,12 +27,11 @@ class GymsBuilding : public Building, public Observer<BuildingInfo>{
   // call enterLastRoll before call tuition() of a gym building
   void enterLastRoll(int lastRoll);
 
-  virtual int tuition() const override;           // inherit from building
-  virtual int movement() const override;          // inherit from building
+  virtual int tuition() const;           // inherit from building
+  virtual int movement() const;          // inherit from building
   virtual BuildingInfo getInfo() const override;  // inherit from subject
   virtual void notify(Subject<BuildingInfo> &whoFrom) override; // inherit from observer
-
-  void setOwner(Player *p);
+  virtual void setOwner(Player *p);
 
   bool mortgage();
   bool unmortgage();

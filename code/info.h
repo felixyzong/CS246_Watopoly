@@ -47,11 +47,6 @@ const std::vector<int> C2{320, 200, 28, 150, 450, 1000, 1200, 1400};
 const std::vector<int> MC{350, 200, 35, 175, 500, 1100, 1300, 1500};
 const std::vector<int> DC{400, 200, 50, 200, 600, 1400, 1700, 2000};
 
-int randomGen(int low, int high, unsigned seed) {
-  std::default_random_engine rng{seed};
-  std::uniform_int_distribution<> distrib(low, high);
-  return distrib(rng);
-}
 
 const std::map<std::string, BuildingName> table = {
   {"AL", BuildingName::AL}, {"ML", BuildingName::ML}, {"ECH", BuildingName::ECH}, {"PAS", BuildingName::PAS},
@@ -67,7 +62,7 @@ const std::map<std::string, BuildingName> table = {
 };
 
 // name must be valid string building name
-BuildingName strtobn(std::string name) {
+inline BuildingName strtobn(std::string name) {
   auto it = table.find(name);
   if (it != table.end()) {
     return it->second;
@@ -75,33 +70,13 @@ BuildingName strtobn(std::string name) {
   return BuildingName::ERROR;
 }
 
-std::string bntostr(BuildingName bn) {
-  auto it = table.find(bn);
-  if (it != table.end()) {
-    return it->first;
+inline std::string bntostr(BuildingName bn) {
+  for (auto it = table.begin(); it != table.end(); it++) {
+    if (it->second == bn) {
+      return it->first;
+    }
   }
   return "ERROR";
-}
-
-bool isNumeric(std::string const &str)
-{
-    auto it = str.begin();
-    while (it != str.end() && std::isdigit(*it)) {
-        it++;
-    }
-    return !str.empty() && it == str.end();
-}
-
-bool checkMonopoly(Building *p, Board *b) {
-  for (int i = 0; i < 40; ++i) {
-    Building * bs = b->getBuilding(i);
-    if (bs->getInfo.BuildingType == BuildingType::Academic && bs->getBlock() == p->getBlock()) {
-      if (bs->getOwner() != p->getOwner()) {
-        return false;
-      }
-    }
-  }
-  return true;
 }
 
 #endif

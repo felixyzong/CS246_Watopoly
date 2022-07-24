@@ -7,7 +7,7 @@ using namespace std;
 AcademicBuilding::AcademicBuilding(BuildingName bn, MonopolyBlock mb, std::vector<int> info):
   Building{BuildingType::Academic, bn}, owner{nullptr}, mb{mb}, improvement{0}, mtg{false}, info{info} {}
 
-AcademicBuilding::~AcademicBuidling() {}
+AcademicBuilding::~AcademicBuilding() {}
 
 Player *AcademicBuilding::getOwner() { return owner; }
 
@@ -67,13 +67,13 @@ int AcademicBuilding::movement() const {
 
 BuildingInfo AcademicBuilding::getInfo() const {
   BuildingInfo bi;
-  bi.bn = this->bn;
+  bi.bn = getBuildingName();
   bi.improvement = this->improvement;
   bi.owner = this->owner;
   return bi;
 }
 
-void AcademicBuilding::notify(Subject<BuildInfo> &whoFrom) {
+void AcademicBuilding::notify(Subject<BuildingInfo> &whoFrom) {
   BuildingInfo bi = whoFrom.getInfo();
   auto it = monopoly.find(bi.bn);
   if (it == monopoly.end()) {
@@ -100,7 +100,7 @@ bool AcademicBuilding::mortgage() {
     cout << "You need sell all improvement first!" << endl;
     return false;
   }
-  mortgage = true;
+  mtg = true;
   owner->addFund(getCost()/2);
   return true;
 }
@@ -114,7 +114,7 @@ bool AcademicBuilding::unmortgage() {
     cout << "You don't have enough money!" << endl;
     return false;
   }
-  mortgage = false;
+  mtg = false;
   owner->addFund(-getCost()*10/6);
   return true;
 }
@@ -122,7 +122,7 @@ bool AcademicBuilding::unmortgage() {
 void AcademicBuilding::updateMonopolist() {
   bool monopolyStatus = true;
   for (auto it = monopoly.begin(); it!= monopoly.end(); ++it) {
-    if (it.second != owner) {
+    if (it->second != owner) {
       monopolyStatus = false;
       monopolist = nullptr;
       break;
@@ -136,4 +136,9 @@ void AcademicBuilding::init() {
   monopolist = nullptr;
   improvement = 0;
   mtg = false;
+}
+
+
+Player * AcademicBuilding::getMonoplist() const {
+  return monopolist;
 }

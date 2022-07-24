@@ -28,7 +28,7 @@ Board::Board() {
   // index 20 - 29
   buildings.push_back(new NonPropertyBuilding(BuildingName::GooseNesting));
   buildings.push_back(new AcademicBuilding(BuildingName::EV1, MonopolyBlock::Env, EV1));
-  buildings.push_back(new AcademicBuilding(BuildingName::NeedlesHall));
+  buildings.push_back(new NonPropertyBuilding(BuildingName::NeedlesHall));
   buildings.push_back(new AcademicBuilding(BuildingName::EV2, MonopolyBlock::Env, EV2));
   buildings.push_back(new AcademicBuilding(BuildingName::EV3, MonopolyBlock::Env, EV3));
   buildings.push_back(new ResidenceBuilding(BuildingName::V1));
@@ -55,8 +55,8 @@ Building * Board::getBuilding(int pos) {
 
 Building * Board::findBuilding(string name) {
   BuildingName bn = strtobn(name);
-  for (auto it = buildings.begin(); it != buildings.end(); ++it) {
-    if (*it->getBuildingName() == bn) return it;
+  for (Building *b : buildings) {
+    if (b->getBuildingName() == bn) return b;
   }
   return nullptr;
 }

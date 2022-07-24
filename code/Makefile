@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -std=c++14 -Wall -MMD -g
+CXXFLAGS = -std=c++14 -MMD -g
 EXEC = watopoly
 SOURCES = $(wildcard *.cc)
 OBJECTS = ${SOURCES:.cc=.o}

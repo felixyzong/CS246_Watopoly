@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <algorithm>
 #include <random>
 #include <chrono>
@@ -14,6 +15,7 @@
 #include "gymsbuilding.h"
 #include "nonpropertybuilding.h"
 #include "board.h"
+#include "watutils.h"
 
 /*
 This class will be responsible for interpreting input as instructions. 
@@ -26,7 +28,7 @@ class Gameplay {
   Building *curBuilding;
   int curTuition = 0;
   bool isRolled = false;
-  unsigned seed = chrono::system_clock::now().time_since_epoch().count();
+  unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
   bool isTest;
   int totalRimCup = 0;
 
@@ -35,23 +37,23 @@ class Gameplay {
   friend class Building;
 
   Player *findPlayer(char c);
-  Building *findBuilding(string name)
+  Building *findBuilding(std::string name);
  	void dropOut();
 	bool checkBankRuptcy();
 
 	void auction(Building *b); // begin an auction on building b, input for a single player will be like [num]/W. "W" means withdraw
 
   bool parseAction(); // return true for normal moves, return false for bankrupt
-  void trade(Building* b, Player* p, int money);
+  void trade(char pn, std::string give, std::string receive);
   void roll();
   void roll(int die1, int die2); // only availale in test mode
   void switchPlayer();
-  void improve(AcademicBuilding *ab, char instruction);
-  void mortgage(Building *b);
-  void unmortgage(Building *b);
+  void improve(std::string bn, std::string instruction);
+  void mortgage(std::string bn);
+  void unmortgage(std::string bn);
   void assets();
   void all();
-  void saveGame();
+  void saveGame(std::string file);
   void loadGame(std::string file);
  public:
   void setseed(unsigned seed);
@@ -59,7 +61,7 @@ class Gameplay {
   void play();
   ~Gameplay();
   friend std::ostream &operator<<(std::ostream& out, Gameplay* gp);
-}
+};
 
 
 #endif

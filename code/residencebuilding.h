@@ -2,6 +2,7 @@
 #define RESIDENCEBUILDING_H
 #include "building.h"
 #include "player.h"
+#include "observer.h"
 #include "info.h"
 #include <iostream>
 #include <vector>
@@ -15,7 +16,7 @@ class ResidenceBuilding : public Building, public Observer<BuildingInfo>{
 
  public:
   ResidenceBuilding(BuildingName bn);
-  ~ResidenceBuidling();
+  ~ResidenceBuilding();
 
   Player *getOwner();
   int getCost();
@@ -23,12 +24,11 @@ class ResidenceBuilding : public Building, public Observer<BuildingInfo>{
 
   int getWorth();
  
-  virtual int tuition() const override;           // inherit from building
-  virtual int movement() const override;          // inherit from building
+  virtual int tuition() const;           // inherit from building
+  virtual int movement() const;          // inherit from building
   virtual BuildingInfo getInfo() const override;  // inherit from subject
   virtual void notify(Subject<BuildingInfo> &whoFrom) override; // inherit from observer
-
-  void setOwner(Player *p);
+  virtual void setOwner(Player *p);
 
   bool mortgage();
   bool unmortgage();

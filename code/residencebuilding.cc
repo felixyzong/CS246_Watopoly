@@ -4,7 +4,7 @@ using namespace std;
 ResidenceBuilding::ResidenceBuilding(BuildingName bn):
   Building{BuildingType::Residence, bn}, owner{nullptr}, totalOwns{0}, mtg{false} {}
 
-ResidenceBuilding::~ResidenceBuidling() {}
+ResidenceBuilding::~ResidenceBuilding() {}
 
 Player *ResidenceBuilding::getOwner() { return owner; }
 
@@ -26,13 +26,13 @@ int ResidenceBuilding::movement() const {
 
 BuildingInfo ResidenceBuilding::getInfo() const {
   BuildingInfo bi;
-  bi.bn = this->bn;
+  bi.bn = getBuildingName();
   bi.improvement = -1;
   bi.owner = this->owner;
   return bi;
 }
 
-void ResidenceBuilding::notify(Subject<BuildInfo> &whoFrom) {
+void ResidenceBuilding::notify(Subject<BuildingInfo> &whoFrom) {
   BuildingInfo bi = whoFrom.getInfo();
   auto it = monopoly.find(bi.bn);
   if (it == monopoly.end()) {
@@ -55,7 +55,7 @@ bool ResidenceBuilding::mortgage() {
     cout << "This building is already mortgaged!" << endl;
     return false;
   }
-  mortgage = true;
+  mtg = true;
   owner->addFund(getCost()/2);
   return true;
 }
@@ -65,7 +65,7 @@ bool ResidenceBuilding::unmortgage() {
     cout << "This building is not mortgaged!" << endl;
     return false;
   }
-  mortgage = false;
+  mtg = false;
   owner->addFund(-getCost()*10/6);
   return true;
 }
@@ -73,8 +73,8 @@ bool ResidenceBuilding::unmortgage() {
 
 void ResidenceBuilding::updateTotalOwns() {
   totalOwns = 1;
-  for (it = monopoly.begin(); it!= monopoly.end(); ++it) {
-    if (it.second == owner) totalOwns++;
+  for (auto it = monopoly.begin(); it!= monopoly.end(); ++it) {
+    if (it->second == owner) totalOwns++;
   }
 }
 

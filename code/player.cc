@@ -15,7 +15,7 @@ char Player::getName() { return name; }
 int Player::getMoney() {return money; }
 int Player::getPos() { return pos; }
 int Player::getTimTurn() { return TimLineTurn; }
-int Player::getCup() { return cup;}
+int Player::getTimCups() const { return cup; }
 bool Player::isInTim() { return isInTimLine; }
 
 int Player::getTotalWorth() {
@@ -67,7 +67,7 @@ bool Player::incTimTurn() {
     }
     TimLineTurn += 1;
     isInTimLine = true;
-    cout << "It's your " << TimeLineTurn << "th turn at tim line." << endl;
+    cout << "It's your " << TimLineTurn << "th turn at tim line." << endl;
     return true;
   }
 }
@@ -77,8 +77,8 @@ void Player::addProperty(Building *b) {
   property.emplace_back(b);
 }
 
-void Player::removeProperty(Buidling *b) {
-  property.erase(b);
+void Player::removeProperty(Building *b) {
+  property.erase(find(property.begin(), property.end(), b));
 }
 
 
@@ -98,13 +98,15 @@ void Player::sellImprovement(Building *b) {
   b->sellImprovement();
 }
 
+
+
 void Player::buyProperty(Building *b) {
-  if (player->money < b->getCost()) {
+  if (money < b->getCost()) {
     cout << "You don't have enough money!" << endl;
     return;
   }
   addProperty(b);
-  p->addFund(-b->getCost());
+  addFund(-b->getCost());
 }
 
 void Player::mortgage(Building *b) {
@@ -132,4 +134,15 @@ void Player::move(int num){
 // differentiates "sent" to a place and "move" to a place
 void Player::setPos(int pos) {
   this->pos = pos;
+}
+
+void Player::printAsset() {
+  cout << "Player " << name << ":" << endl;
+  cout << "Money: $" << money << endl;
+  cout << "Total Worth: $" << getTotalWorth() << endl;
+  cout << "Properties: ";
+  for (int i = 0; i < property.size(); i++) {
+    cout << bntostr(property[i]->getBuildingName()) << ", ";
+  }
+  cout << endl;
 }

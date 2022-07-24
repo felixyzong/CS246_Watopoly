@@ -1,6 +1,6 @@
 #ifndef SUBJECT_H
 #define SUBJECT_H
-
+#include <vector>
 template <typename InfoType> class Observer;
 
 template <typename InfoType>
@@ -14,7 +14,7 @@ class Subject {
 
 template <typename InfoType>
 void Subject<InfoType>::attach(Observer<InfoType> *o) {
-  observers.emplace_back(o);
+  obs.emplace_back(o);
 }
 
 template <typename InfoType>
