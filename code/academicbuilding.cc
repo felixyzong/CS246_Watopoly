@@ -4,17 +4,6 @@
 #include "building.h"
 using namespace std;
 
-
-class AcademicBuilding : public Building {
-  MonopolyBlock mb;
-  Player* owner = nullptr;
-  Player* monopolist = nullptr;
-  std::map<BuildingName, Player*> monopoly;
-  int improvement = 0;
-  bool mortgage = 0;
-  std::vector<int> info;
-
-
 AcademicBuilding::AcademicBuilding(BuildingName bn, vector<int> info) : bn{bn}, info{info} {}
 
 AcademicBuilding::~AcademicBuilding() {
@@ -78,7 +67,7 @@ int AcademicBuilding::movement() {
   return 0;
 }
 
-bool AcademicBuilding::AddImprovement() {
+bool AcademicBuilding::addImprovement() {
   if (improvement == 5) {
     cout << "There are already 5 improvements, you can't add more!" << endl;
     return false;
@@ -102,17 +91,8 @@ bool AcademicBuilding::sellImprovement() {
   return true;
 }
 
-<<<<<<< HEAD
 int AcademicBuilding::getImprovement() {
   return improvement;
-=======
-int AcademicBuilding::tuition() const {
-  return info[improvement + 2];
-}
-
-Player * AcademicBuilding::getOwner() {
-  return owner;
->>>>>>> 444017ad208972637c1afd14f9a1fcdbed30595c
 }
 
 bool AcademicBuilding::getMortgage() {
@@ -120,11 +100,11 @@ bool AcademicBuilding::getMortgage() {
 }
 
 void AcademicBuilding::mortgage() {
-<<<<<<< HEAD
   owner->addFund(0.5 * (info[0] + (info[1] * improvement)));
   improvement = 0;
   mortgage = 1;
 }
+
 void AcademicBuilding::unMortgage() {
   owner->addFund(-0.6 * info[0]);
   mortgage = 0;
@@ -147,16 +127,3 @@ void AcademicBuilding::updateMonopolist() {
 }
 void AcademicBuilding::init() {
 }
-  
-=======
-  mortgage = true;
-}
-
-void AcademicBuilding::unMortgage() {
-  mortgage = false;
-}
-
-void AcademicBuilding::setOwner(Player *p) {
-  owner = p;
-}
->>>>>>> 444017ad208972637c1afd14f9a1fcdbed30595c

@@ -7,7 +7,6 @@
 class Building : public Subject<BuildingInfo> {
   BuildingType bt;
   BuildingName bn;
-<<<<<<< HEAD
 
  public:
   virtual Building(BuildingType bt, BuildingName bn): bt{bt}, bn{bn} {}
@@ -20,7 +19,6 @@ class Building : public Subject<BuildingInfo> {
 
   virtual int tuition() const = 0;
   virtual int movement() const = 0;
-=======
   
  public:
   Building(BuildingType bt, BuildingName bn);
@@ -31,7 +29,6 @@ class Building : public Subject<BuildingInfo> {
   BuildingType getBuildingType() const { return bt; }
   virtual BuildingInfo getInfo() const = 0;
   virtual ~Building() = default;
->>>>>>> 444017ad208972637c1afd14f9a1fcdbed30595c
 };
 
 #endif
