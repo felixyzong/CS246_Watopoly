@@ -10,7 +10,7 @@
 #include "gymsbuilding.h"
 #include "nonpropertybuilding.h"
 
-class Player : Subject<PlayerInfo> {
+class Player : public Subject<PlayerInfo> {
   int money;
   std::vector<Property *> property;
 
@@ -22,6 +22,7 @@ class Player : Subject<PlayerInfo> {
   bool rolled;
  public:
   Player(int money, char name);
+  ~Player();
 
   char getName();
   int getMoney();

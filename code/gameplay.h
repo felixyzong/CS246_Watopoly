@@ -58,7 +58,6 @@ class Gameplay {
   Gameplay(bool test);
   void play();
   ~Gameplay();
-  friend std::ostream &operator<<(std::ostream& out, Gameplay* gp);
 };
 
 

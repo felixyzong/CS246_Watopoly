@@ -9,7 +9,12 @@
 #include <algorithm>
 
 using namespace std;
-Player::Player(int money, char name): money{money}, name{name} {}
+Player::Player(int money, char name): money{money}, name{name}, pos{0} {}
+
+Player::~Player() {
+  pos = -1;
+  notifyObservers();
+}
 
 char Player::getName() { return name; }
 int Player::getMoney() {return money; }

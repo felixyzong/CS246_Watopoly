@@ -48,9 +48,11 @@ Gameplay::Gameplay(bool test) {
 
   // buildings initialize
   b = new Board();
+  b->init(players);
   curBuilding = b->getBuilding(0);
   curPlayer = players[0];
   isTest = test;
+  cout << b;
 }
 
 
@@ -138,6 +140,7 @@ void Gameplay::roll(int die1, int die2) {
 
   cout << "You moved from " << bntostr(b->getBuilding(curPlayer->getPos())->getBuildingName()) << " to ";
   curPlayer->move(die1+die2);
+  cout << b;
   cout << bntostr(b->getBuilding(curPlayer->getPos())->getBuildingName()) << endl;
   curBuilding = b->getBuilding(curPlayer->getPos());
 
@@ -172,6 +175,7 @@ void Gameplay::roll(int die1, int die2) {
           }
           cout << "You bought " << bntostr(curProperty->getBuildingName()) << " successfully!" << endl;
           curPlayer->buyProperty(static_cast<Property *>(curBuilding));
+          cout << b;
           break;
         } else if (yn == "no") {
           auction(curProperty);
@@ -448,6 +452,7 @@ void Gameplay::trade(char pn, string give, string receive) {
         tradePlayer->removeProperty(receiveProp);
         tradePlayer->addFund(giveMoney);
         receiveProp->setOwner(curPlayer);
+        cout << b;
         break;
       } else if (command == "reject") {
         cout << "Trade rejected!" << endl;
@@ -522,6 +527,7 @@ void Gameplay::trade(char pn, string give, string receive) {
           tradePlayer->addProperty(giveProp);
           receiveProp->setOwner(curPlayer);
           giveProp->setOwner(tradePlayer);
+          cout << b;
           break;
         } else if (command == "reject") {
           cout << "Trade rejected!" << endl;
@@ -558,6 +564,7 @@ void Gameplay::auction(Building* bs) {
       p->addProperty(prop);
       p->addFund(-curBid);
       prop->setOwner(p);
+      cout << b;
       return;
     } else if (playersCount == 0 && curBid == prop->getCost()-1) {
       cout << "No player offers a bid, auction aborts." << endl;
@@ -600,8 +607,10 @@ void Gameplay::improve(string bn, string instruction) {
     cout << bn << " is not an academic building!" << endl;
   } else if (instruction == "buy") {
     curPlayer->buyImprovement(static_cast<Property *>(bs));
+    cout << b;
   } else if (instruction == "sell") {
     curPlayer->sellImprovement(static_cast<Property *>(bs));
+    cout << b;
   } else {
     cout << "Invalid command, please enter buy/sell for instruction!" << endl;
   }
@@ -702,11 +711,5 @@ void Gameplay::loadGame(string file) {
 
 }
 
-
-
-ostream &operator<<(ostream& out, Gameplay* gp) {
-  out << gp;
-  return out;
-}
 
 
