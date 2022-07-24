@@ -102,8 +102,17 @@ bool AcademicBuilding::sellImprovement() {
   return true;
 }
 
+<<<<<<< HEAD
 int AcademicBuilding::getImprovement() {
   return improvement;
+=======
+int AcademicBuilding::tuition() const {
+  return info[improvement + 2];
+}
+
+Player * AcademicBuilding::getOwner() {
+  return owner;
+>>>>>>> 444017ad208972637c1afd14f9a1fcdbed30595c
 }
 
 bool AcademicBuilding::getMortgage() {
@@ -111,6 +120,7 @@ bool AcademicBuilding::getMortgage() {
 }
 
 void AcademicBuilding::mortgage() {
+<<<<<<< HEAD
   owner->addFund(0.5 * (info[0] + (info[1] * improvement)));
   improvement = 0;
   mortgage = 1;
@@ -138,3 +148,15 @@ void AcademicBuilding::updateMonopolist() {
 void AcademicBuilding::init() {
 }
   
+=======
+  mortgage = true;
+}
+
+void AcademicBuilding::unMortgage() {
+  mortgage = false;
+}
+
+void AcademicBuilding::setOwner(Player *p) {
+  owner = p;
+}
+>>>>>>> 444017ad208972637c1afd14f9a1fcdbed30595c

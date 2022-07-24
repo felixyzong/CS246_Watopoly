@@ -1,7 +1,8 @@
 #ifndef INFO_H
 #define INFO_H
 class Player;
-
+class Building;
+class Board;
 #include <vector>
 #include <map>
 
@@ -86,5 +87,16 @@ bool isNumeric(std::string const &str)
     return !str.empty() && it == str.end();
 }
 
+bool checkMonopoly(Building *p, Board *b) {
+  for (int i = 0; i < 40; ++i) {
+    Building * bs = b->getBuilding(i);
+    if (bs->getInfo.BuildingType == BuildingType::Academic && bs->getBlock() == p->getBlock()) {
+      if (bs->getOwner() != p->getOwner()) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
 
 #endif
