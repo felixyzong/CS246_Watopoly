@@ -226,7 +226,7 @@ void Board::notify(Subject<PlayerInfo> &whoFrom) {
   auto it = playerPos.find(pi.name);
   
   if (it == playerPos.end()) {
-    playerPos.insert(pair<char,int>(pi.name,pi.pos));
+    playerPos.insert(make_pair(pi.name,pi.pos));
   } 
   clearPlayer(pi.name);
 
@@ -296,15 +296,15 @@ int Board::getBuildingPos(BuildingName bn) {
 // return the coordinate of left up cornor of the building square
 pair<int,int> Board::getBoardEntry(int pos) {
   if ( pos < 10) {
-    return pair<int,int>(61,81-8*pos);
+    return make_pair(61,81-8*pos);
   } else if ( pos < 20 ) {
-    return pair<int,int>(121-pos*6,1);
+    return make_pair(121-pos*6,1);
   } if ( pos < 30 ) {
-    return pair<int,int>(1,pos*8-159);
+    return make_pair(1,pos*8-159);
   } else if (pos < 40 ) {
-    return pair<int,int>(pos*6-179,81);
+    return make_pair(pos*6-179,81);
   }
-  return pair<int,int>(0,0); // should not happen
+  return make_pair(0,0); // should not happen
 }
 
 void Board::clearPlayer(char name) {
