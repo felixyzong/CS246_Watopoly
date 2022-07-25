@@ -315,7 +315,7 @@ void Board::compileText() {
 
 void Board::clearBoard() {
   for (int i = 0; i < 5 * height + 6; ++i) {
-    text[i] = (string(8 * width + 9, ' '));
+    text[i] = (string(9 * width + 10, ' '));
   }
 }
 std::ostream &operator<<(std::ostream &out, Board* b) {
