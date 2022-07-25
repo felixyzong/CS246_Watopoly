@@ -229,11 +229,13 @@ void Board::notify(Subject<PlayerInfo> &whoFrom) {
     playerPos.insert(pair<char,int>(pi.name,pi.pos));
   } 
   clearPlayer(pi.name);
-
+  
   if (pi.pos == -1) {
     playerPos.erase(pi.name);
     return;
   }
+  
+  it->second = pi.pos;
   auto entry = getBoardEntry(pi.pos);
   bool write = false;
   for (int i = entry.first+3; i != entry.first+5; i++){
@@ -247,9 +249,6 @@ void Board::notify(Subject<PlayerInfo> &whoFrom) {
     }
     if (write) break;
   }
-
-  auto it = playerPos.find(pi.name);
-  it->second = pi.pos;
 }
 
 void Board::notify(Subject<BuildingInfo> &whoFrom) {
