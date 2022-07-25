@@ -9,26 +9,32 @@
 #include "player.h"
 #include "observer.h"
 #include "subject.h"
+#include "player.h"
 #include <map>
 #include <vector>
 #include <string>
 #include <memory>
 #include <iostream>
 #include <string>
+#include <utility>
 
 class Board : public Observer<BuildingInfo>, public Observer<PlayerInfo> {
   std::vector<std::string> text;
   std::vector<Building *> buildings;
   std::map<char,int> playerPos;
- protected:
- 
+  std::map<std::pair<int, int>, int> buildingLayout;
+  int width = 0, height = 0;
+  void compileAca(Building *b, int x, int y);
+  void compileOther(Building *b, int x, int y);
+  void compilePlayers();
+  void clearBoard();
+protected:
+  void compileText();
   BuildingName getBuildingName(int pos);
-  int getBuildingPos(BuildingName bn);
-  std::pair<int,int> getBoardEntry(int pos);
-  void clearPlayer(char name); // remove this player from display text
- public:
+
+public:
   void init(std::vector<Player*> players);
-  Board(); // initialize the board, can be extended to multiple themes by parameter
+  Board(int w, int h); // initialize the board, can be extended to multiple themes by parameter
   Building *getBuilding(int pos);
   Building *findBuilding(std::string name);
   virtual void notify(Subject<BuildingInfo> &whoFrom) override;

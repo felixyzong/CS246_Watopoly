@@ -47,7 +47,7 @@ Gameplay::Gameplay(bool test) {
   }
 
   // buildings initialize
-  b = new Board();
+  b = new Board(11, 11);
   b->init(players);
   curBuilding = b->getBuilding(0);
   curPlayer = players[0];

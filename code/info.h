@@ -56,7 +56,7 @@ const std::map<std::string, BuildingName> table = {
   {"B2", BuildingName::B2}, {"EIT", BuildingName::EIT}, {"ESC", BuildingName::ESC}, {"C2", BuildingName::C2},
   {"MC", BuildingName::MC}, {"DC", BuildingName::DC}, {"MKV", BuildingName::MKV}, {"UWP", BuildingName::UWP},
   {"V1", BuildingName::V1}, {"REV", BuildingName::REV}, {"PAC", BuildingName::PAC}, {"CIF", BuildingName::CIF},
-  {"CollectOSAP", BuildingName::CollectOSAP}, {"DCTimsLine", BuildingName::DCTimsLine}, {"GoToTims", BuildingName::DCTimsLine},
+  {"CollectOSAP", BuildingName::CollectOSAP}, {"DCTimsLine", BuildingName::DCTimsLine}, {"GoToTims", BuildingName::GoToTims},
   {"GooseNesting", BuildingName::GooseNesting}, {"Tuition", BuildingName::Tuition}, {"CoopFee", BuildingName::CoopFee},
   {"SLC", BuildingName::SLC}, {"NeedlesHall", BuildingName::NeedlesHall}, {"ERROR", BuildingName::ERROR}
 };
