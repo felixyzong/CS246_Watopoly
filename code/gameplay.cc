@@ -566,6 +566,12 @@ void Gameplay::auction(Building* bs) {
   
   for (int i = index; ; i++) {
     if (i == players.size()) i = 0;
+
+    if (playersCount == 0 && curBid == prop->getCost()-1) {
+      cout << "No player offers a bid, auction aborts." << endl;
+      return;
+    }
+
     if (!auctionStatus[i]) continue;
 
     if (playersCount == 1 && curBid != prop->getCost()-1) {
@@ -574,9 +580,6 @@ void Gameplay::auction(Building* bs) {
       p->addFund(-curBid);
       prop->setOwner(p);
       cout << b;
-      return;
-    } else if (playersCount == 0 && curBid == prop->getCost()-1) {
-      cout << "No player offers a bid, auction aborts." << endl;
       return;
     } else {
       cout << "Player " << players[i]->getName() << ", please withdraw(W) or enter your bid(at least $" << curBid+1 << ") :" ;
