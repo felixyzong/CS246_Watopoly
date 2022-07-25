@@ -60,7 +60,7 @@ Board::Board(string theme_file) {
   }
   myfile.close();
   for (int i = 0; i < 5 * height + 6; ++i) {
-    text.emplace_back(string(8 * width + 9, ' '));
+    text.emplace_back(string(9 * width + 10, ' '));
   }
 
 
@@ -173,38 +173,38 @@ void Board::compileAca(Building *b, int x, int y) {
     if (it->second == bn) name = it->first;
   }
   for (int i = 1 + 5 * y; i < 6 + 5 * y; ++i) {
-    text[i][8 + 8 * x] = '|';
+    text[i][9 + 9 * x] = '|';
   }
-  for (int i = 1 + 8 * x; i < 8 + 8 * x; ++i) {
+  for (int i = 1 + 9 * x; i < 9 + 9 * x; ++i) {
     text[5 + 5 * y][i] = '_';
   }
 
   // upper part for improvement
-  for (int i = 1 + 8 * x; i < 8 + 8 * x; ++i) {
+  for (int i = 1 + 9 * x; i < 9 + 9 * x; ++i) {
     text[5 * y + 2][i] = '-';
   }
   for (int i = 0; i < name.size(); ++i) {
-    text[5 * y + 3][i + 1 + 8 * x] = name[i];
+    text[5 * y + 3][i + 1 + 9 * x] = name[i];
   }
   // improvement
   for (int i = 0; i < static_cast<AcademicBuilding *>(b)->getImprovement(); ++i) {
-    text[5 * y + 1][i + 1 + 8 * x] = 'I';
+    text[5 * y + 1][i + 1 + 9 * x] = 'I';
   }
   // complete boundary
   if (buildingLayout.find(make_pair(x, y - 1)) == buildingLayout.end()) {
-    for (int i = 1 + 8 * x; i < 8 + 8 * x; ++i) {
+    for (int i = 1 + 9 * x; i < 9 + 9 * x; ++i) {
       text[5 * y][i] = '_';
     }
   }
   if (buildingLayout.find(make_pair(x - 1, y)) == buildingLayout.end()) {
     for (int i = 1 + 5 * y; i < 6 + 5 * y; ++i) {
-      text[i][8 * x] = '|';
+      text[i][9 * x] = '|';
     }
   }
 
   // owner
   if (static_cast<AcademicBuilding *>(b)->getOwner() != nullptr) {
-    text[5 * y + 3][6 + 1 + 8 * x] = static_cast<AcademicBuilding *>(b)->getOwner()->getName();
+    text[5 * y + 3][6 + 1 + 9 * x] = static_cast<AcademicBuilding *>(b)->getOwner()->getName();
   }
 
 }
@@ -217,36 +217,36 @@ void Board::compileOther(Building *b, int x, int y) {
     if (it->second == bn) name = it->first;
   }
   int line = 1 + y * 5;
-  for (int i = 0; i < 7; ++i) {
+  for (int i = 0; i < 8; ++i) {
     if (i == name.size()) break;
-    text[line][1 + i + 8 * x] = name[i];
+    text[line][1 + i + 9 * x] = name[i];
   }
-  if (name.size() > 7) {
-    for (int i = 7; i < name.size(); ++i) {
-      text[line+1][1 + x * 8 + i-7] = name[i];
+  if (name.size() > 8) {
+    for (int i = 8; i < name.size(); ++i) {
+      text[line+1][1 + x * 9 + i-8] = name[i];
     }
   }
   for (int i = 1 + 5 * y; i < 6 + 5 * y; ++i) {
-    text[i][8 + 8 * x] = '|';
+    text[i][9 + 9 * x] = '|';
   }
-  for (int i = 1 + 8 * x; i < 8 + 8 * x; ++i) {
+  for (int i = 1 + 9 * x; i < 9 + 9 * x; ++i) {
     text[5 + 5 * y][i] = '_';
   }
   // complete boundary
   if (buildingLayout.find(make_pair(x, y - 1)) == buildingLayout.end()) {
-    for (int i = 1 + 8 * x; i < 8 + 8 * x; ++i) {
+    for (int i = 1 + 9 * x; i < 9 + 9 * x; ++i) {
       text[5 * y][i] = '_';
     }
   }
   if (buildingLayout.find(make_pair(x - 1, y)) == buildingLayout.end()) {
     for (int i = 1 + 5 * y; i < 6 + 5 * y; ++i) {
-      text[i][8 * x] = '|';
+      text[i][9 * x] = '|';
     }
   }
 
   if (b->getBuildingType() != BuildingType::Nonproperty) {
     if (static_cast<Property *>(b)->getOwner() != nullptr) {
-      text[5 * y + 2][6 + 1 + 8 * x] = static_cast<Property *>(b)->getOwner()->getName();
+      text[5 * y + 2][7 + 1 + 9 * x] = static_cast<Property *>(b)->getOwner()->getName();
     }
   }
 }
@@ -263,10 +263,10 @@ void Board::compilePlayers() {
       }
     }
     int index = 0;
-    while (text[4 + 5 * y][index + 8 * x] != ' ') {
+    while (text[4 + 5 * y][index + 9 * x] != ' ') {
       index++;
     }
-    text[4 + 5 * y][index + 8 * x] = it->first;
+    text[4 + 5 * y][index + 9 * x] = it->first;
   }
 }
 
