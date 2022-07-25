@@ -248,6 +248,8 @@ void Board::notify(Subject<PlayerInfo> &whoFrom) {
     if (write) break;
   }
 
+  auto it = playerPos.find(pi.name);
+  it->second = pi.pos;
 }
 
 void Board::notify(Subject<BuildingInfo> &whoFrom) {
