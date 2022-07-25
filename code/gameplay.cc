@@ -372,6 +372,11 @@ bool Gameplay::parseAction() {
       cout << "You cannot declare bankruptcy!";
     }
     
+  } else if (action == "save") {
+    string save_name;
+    cin >> save_name;
+    saveGame(save_name);
+      
   } else if (action == "help") {
     cout << "Available command list:" << endl;
 
@@ -398,6 +403,8 @@ bool Gameplay::parseAction() {
       cout << "all" << endl;
       cout << "assets" << endl;
     }
+    
+    cout << "save<filename>" <<endl;
     
   } else {
     cout << "Invalid command! Enter \"help\" to check valid commands." << endl;
@@ -642,8 +649,8 @@ void Gameplay::unmortgage(string bn) {
   if (bs == nullptr) {
     cout << bn << " is not a name of a property building!" << endl;
 
-  } else if (bs->getBuildingType() != BuildingType::Academic) {
-    cout << bn << " is not an academic building!" << endl;
+  } else if (bs->getBuildingType() == BuildingType::Nonproperty) {
+    cout << bn << " is not an property building!" << endl;
 
   } else {
     curPlayer->unmortgage(static_cast<Property *>(bs));
@@ -682,11 +689,11 @@ void Gameplay::saveGame(string save_name){
   for (Player * p : players) {
     saving << "Player " << p->getName() << " " << p->getTimCups() << " " << p->getTotalWorth() << " " << p->getPos();
     if (p->getPos() == 10 && p->isInTim()) {
-      cout << " "  << 1 << " " << p->getTimTurn() << endl;
+      saving << " "  << 1 << " " << p->getTimTurn() << endl;
     } else if (p->getPos() == 10) {
-      cout << " 0" << endl;
+      saving << " 0" << endl;
     } else {
-      cout << endl;
+      saving << endl;
     }
   }
   for (int i = 0; i < 40; i++) {
