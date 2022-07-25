@@ -10,9 +10,8 @@
 
 
 inline int randomGen(int low, int high) {
-
   unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-  std::default_random_engine rng{seed};
+  std::mt19937 rng{seed};
   std::uniform_int_distribution<> distrib(low, high);
   int r = distrib(rng);
   // test

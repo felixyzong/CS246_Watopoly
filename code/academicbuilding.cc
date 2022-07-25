@@ -93,7 +93,7 @@ void AcademicBuilding::setOwner(Player *p) {
 }
 
 bool AcademicBuilding::mortgage() {
-  if (mtg == true) {
+  if (mtg) {
     cout << "This building is already mortgaged!" << endl;
     return false;
   }
@@ -107,7 +107,7 @@ bool AcademicBuilding::mortgage() {
 }
 
 bool AcademicBuilding::unmortgage() {
-  if (mtg == false) {
+  if (!mtg) {
     cout << "This building is not mortgaged!" << endl;
     return false;
   }
@@ -129,7 +129,7 @@ void AcademicBuilding::updateMonopolist() {
       break;
     }
   }
-  if (monopolyStatus == true) monopolist = owner;
+  if (monopolyStatus) monopolist = owner;
 }
 
 void AcademicBuilding::init() {

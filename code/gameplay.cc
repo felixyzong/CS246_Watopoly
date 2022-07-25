@@ -8,11 +8,11 @@ Gameplay::Gameplay(bool test) {
   const int defaultMoney = 1500;
   int playerCount;
   char playerChar;
-  cout << "Please enter the number of players(at lease 6, at most 8): ";
+  cout << "Please enter the number of players(at lease 2, at most 8): ";
   cin >> playerCount;
-  while (playerCount < 6 || playerCount > 8) {
+  while (playerCount < 2 || playerCount > 8) {
     cout << "Invalid number of players." << endl;
-    cout << "Please enter the number of players(at lease 6, at most 8): ";
+    cout << "Please enter the number of players(at lease 2, at most 8): ";
     cin >> playerCount;
   }
 
@@ -585,7 +585,7 @@ void Gameplay::auction(Building* bs) {
           if (bid > players[i]->getMoney()) {
             cout << "You don't have enough money!" << endl;
           } else if (curBid >= bid) {
-            cout << "Your bid is less than or equal to current highiest bid!" << endl;
+            cout << "Your bid is less than or equal to current highest bid!" << endl;
           } else {
             curBid = bid;
             p = players[i];
@@ -626,8 +626,8 @@ void Gameplay::mortgage(string bn) {
   if (bs == nullptr) {
     cout << bn << " is not a name of a property building!" << endl;
 
-  } else if (bs->getBuildingType() != BuildingType::Academic) {
-    cout << bn << " is not an academic building!" << endl;
+  } else if (bs->getBuildingType() == BuildingType::Nonproperty) {
+    cout << bn << " is not an property building!" << endl;
   } else {
     curPlayer->mortgage(static_cast<Property *>(bs));
   }
