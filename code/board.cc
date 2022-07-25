@@ -204,6 +204,7 @@ void Board::compileAca(Building *b, int x, int y) {
   if (static_cast<AcademicBuilding *>(b)->getOwner() != nullptr) {
     text[5 * y + 3][6 + 1 + 8 * x] = static_cast<AcademicBuilding *>(b)->getOwner()->getName();
   }
+
 }
 
 void Board::compileOther(Building *b, int x, int y) {

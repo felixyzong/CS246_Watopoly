@@ -213,7 +213,7 @@ void Gameplay::roll(int die1, int die2) {
   } else if ( curBuilding->getBuildingType() == BuildingType::Nonproperty) {
     // if curBuilding is a Nonproperty building, curPlayer react based on specific rules
     int moveNum = static_cast<NonPropertyBuilding *>(curBuilding)->movement();
-    curTuition = curBuilding->tuition();
+    curTuition = static_cast<NonPropertyBuilding *>(curBuilding)->tuition();
     switch(curBuilding->getBuildingName()) {
       case BuildingName::Tuition: {
         cout << "You need to pay $300 or 10%($" << curPlayer->getTotalWorth() / 10 << ") of your total wealth:" << endl;
@@ -264,7 +264,6 @@ void Gameplay::roll(int die1, int die2) {
             cout << "You get a Rim Cup!" << endl;
           }
         }
-        curTuition = static_cast<NonPropertyBuilding *>(curBuilding)->tuition();
         if (curTuition < 0) {
           curPlayer->addFund(-curTuition);
         } else if (curTuition > 0) {
@@ -567,10 +566,12 @@ void Gameplay::auction(Building* bs) {
   
   for (int i = index; ; i++) {
     if (i == players.size()) i = 0;
+
     if (playersCount == 0 && curBid == prop->getCost()-1) {
       cout << "No player offers a bid, auction aborts." << endl;
       return;
     }
+
     if (!auctionStatus[i]) continue;
 
     if (playersCount == 1 && curBid != prop->getCost()-1) {
