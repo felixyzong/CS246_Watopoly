@@ -1,7 +1,7 @@
 #include "board.h"
 
 using namespace std;
-Board::Board(int w, int h) {
+Board::Board(string theme_file) {
   // buildings initialize
   // index 0 - 9
   buildings.push_back(new NonPropertyBuilding(BuildingName::CollectOSAP));
@@ -48,17 +48,19 @@ Board::Board(int w, int h) {
   buildings.push_back(new NonPropertyBuilding(BuildingName::CoopFee));
   buildings.push_back(new AcademicBuilding(BuildingName::DC, MonopolyBlock::Math, DC));
 
-  width = w;
-  height = h;
+  ifstream myfile(theme_file);
+  string line;
+  if (myfile.is_open()) {
+    myfile >> width >> height;
+    for (int i = 0; i < 40; ++i) {
+      int x, y;
+      myfile >> x >> y;
+      buildingLayout[make_pair(x,y)] = i;
+    }
+  }
+  myfile.close();
   for (int i = 0; i < 5 * height + 6; ++i) {
     text.emplace_back(string(8 * width + 9, ' '));
-  }
-
-  for (int i = 0; i < 40; ++i) {
-    if (0 <= i && i < 10) buildingLayout[make_pair(10 - i, 10)] = i;
-    if (10 <= i && i < 20) buildingLayout[make_pair(0, 20 - i)] = i;
-    if (20 <= i && i < 30) buildingLayout[make_pair(i - 20, 0)] = i;
-    if (30 <= i && i < 40) buildingLayout[make_pair(10, i - 30)] = i;
   }
 
 

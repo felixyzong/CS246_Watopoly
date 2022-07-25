@@ -16,6 +16,7 @@
 #include <memory>
 #include <iostream>
 #include <string>
+#include <fstream>
 #include <utility>
 
 class Board : public Observer<BuildingInfo>, public Observer<PlayerInfo> {
@@ -34,7 +35,7 @@ protected:
 
 public:
   void init(std::vector<Player*> players);
-  Board(int w, int h); // initialize the board, can be extended to multiple themes by parameter
+  Board(std::string theme_file); // initialize the board, can be extended to multiple themes by parameter
   Building *getBuilding(int pos);
   Building *findBuilding(std::string name);
   virtual void notify(Subject<BuildingInfo> &whoFrom) override;
