@@ -130,7 +130,7 @@ Gameplay::Gameplay(bool test, string load, string theme) {
 
 Gameplay::~Gameplay() {
   delete b;
-  for (Player *p : players) delete p;
+  players.clear();
 }
 
 
@@ -174,6 +174,7 @@ void Gameplay::dropOut() {
   Player *p = curPlayer;
   switchPlayer();
   players.erase(find(players.begin(), players.end(), p));
+  delete p;
 }
 
 
@@ -244,13 +245,15 @@ void Gameplay::roll(int die1, int die2) {
             cout << "Would you like to trade/sell property/improvements? Please enter yes or no: ";
             string command;
             while (cin >> command) {
-              if (yn == "yes") {
+              if (command == "yes") {
                 parseAction();
                 break;
-              } else if (yn == "no") {
+              } else if (command == "no") {
                 auction(curProperty);
                 isRolled = true;
                 return;
+              } else {
+                cout << "Invalid command! Would you like to trade/sell property/improvements? Please enter yes or no: ";
               }
             }
           }
@@ -299,18 +302,22 @@ void Gameplay::roll(int die1, int die2) {
         string payMethod;
         while (cin >> payMethod) {
           if (payMethod == "$300" || payMethod == "300") {
-            if (curPlayer->getMoney() < 300) {
-              cout << "You don't have enough money!";
-            } else {
-              curPlayer->addFund(-300);
-              break;
-            }
+            curTuition = 300;
+            break;
           } else if (payMethod == "10%" || payMethod == "10") {
-            curPlayer->addFund(-curPlayer->getTotalWorth() / 10);
+            curTuition = curPlayer->getTotalWorth() / 10;
             break;
           }
           cout << "Invalid pay method! Please choose your way to pay (enter $300 or 10%): " << endl;
         }
+        cout << "You need to pay $" << curTuition << " to University of Waterloo." << endl;
+        while(curPlayer->getMoney() < curTuition) {
+          cout << "You don't have enough money! You only have $" << curPlayer->getMoney() << endl;
+          cout << "You need to raise money!";
+          if (!parseAction()) return;
+        }
+        cout << "You paid tuition successfully." << endl;
+        curPlayer->addFund(-curTuition);
         break;
       }
       case BuildingName::SLC: {
@@ -445,14 +452,10 @@ bool Gameplay::parseAction() {
     unmortgage(bn);
   
   } else if (action == "all") {
-    if (curTuition != 0) {
-      cout << "You cannot use this command at this point, please pay tuition first!";
-    } all();
+    all();
 
   } else if (action == "assets") {
-    if (curTuition != 0) {
-      cout << "You cannot use this command at this point, please pay tuition first!";
-    } else assets();
+    assets();
 
   } else if (action == "bankrupt") {
     if (checkBankRuptcy()) {
@@ -460,7 +463,7 @@ bool Gameplay::parseAction() {
       dropOut();
       return false;
     } else {
-      cout << "You cannot declare bankruptcy!";
+      cout << "You cannot declare bankruptcy!" << endl;
     }
     
   } else if (action == "save") {
@@ -490,12 +493,11 @@ bool Gameplay::parseAction() {
       cout << "bankrupt" << endl;
     }
 
-    if (curTuition == 0) {
-      cout << "all" << endl;
-      cout << "assets" << endl;
-    }
+    cout << "all" << endl;
+    cout << "assets" << endl;
+
     
-    cout << "save<filename>" <<endl;
+    cout << "save <filename>" <<endl;
     
   } else {
     cout << "Invalid command! Enter \"help\" to check valid commands." << endl;
@@ -795,8 +797,10 @@ void Gameplay::all() {
 
 void Gameplay::play() {
   while (true) {
-    if (!parseAction() && players.size() == 1) break;
+    if (players.size() == 1) break;
+    else parseAction();
   }
+  cout << curPlayer->getName() << " is the winner of the game!" << endl;
 }
 
 
