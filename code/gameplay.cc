@@ -28,7 +28,7 @@ Gameplay::Gameplay(bool test) {
       cout  << " " << name;
     }
     cout << endl;
-    cout << "Player #" << i+1 << ", please enter your avator char: ";
+    cout << "Player #" << i+1 << ", please enter your avatar char: ";
     cin >> playerChar;
     while (find(availablePlayers.begin(), availablePlayers.end(), playerChar) == availablePlayers.end())
     {
@@ -38,7 +38,7 @@ Gameplay::Gameplay(bool test) {
         cout  << " " << name;
       }
       cout << endl;
-      cout << "Player #" << i << ", please enter your avator char: ";
+      cout << "Player #" << i << ", please enter your avatar char: ";
       cin >> playerChar;
     }
 
@@ -78,7 +78,7 @@ Gameplay::Gameplay(bool test, bool isLoad ,string load) {
       cin >> playerCount;
     }
 
-    // display a list of avatas for choosing
+    // display a list of avatars for choosing
     cout << "Please choose your avatar from the following:" << endl;
     cout << "| Goose | GRT bus | Tim Hortons Doughnut | Professor | Student | Money | Laptop | Pink tie |" << endl;
     cout << "|   G   |    B    |           D          |     P     |    S    |   $   |   L    |    T     |" << endl;
@@ -90,7 +90,7 @@ Gameplay::Gameplay(bool test, bool isLoad ,string load) {
         cout  << " " << name;
       }
       cout << endl;
-      cout << "Player #" << i+1 << ", please enter your avator char: ";
+      cout << "Player #" << i+1 << ", please enter your avatar char: ";
       cin >> playerChar;
       while (find(availablePlayers.begin(), availablePlayers.end(), playerChar) == availablePlayers.end())
       {
@@ -100,7 +100,7 @@ Gameplay::Gameplay(bool test, bool isLoad ,string load) {
           cout  << " " << name;
         }
         cout << endl;
-        cout << "Player #" << i << ", please enter your avator char: ";
+        cout << "Player #" << i << ", please enter your avatar char: ";
         cin >> playerChar;
       }
 
@@ -241,7 +241,7 @@ void Gameplay::roll(int die1, int die2) {
       while (cin >> yn) {
         if (yn == "yes") {
           while(curPlayer->getMoney() < curProperty->getCost()) {
-            cout << "You don't have enough money! You only have " << curPlayer->getMoney() << endl;
+            cout << "You don't have enough money! You only have $" << curPlayer->getMoney() << endl;
             cout << "Would you like to trade/sell property/improvements? Please enter yes or no: ";
             string command;
             while (cin >> command) {
@@ -280,7 +280,7 @@ void Gameplay::roll(int die1, int die2) {
       curTuition = static_cast<Property *>(curBuilding)->tuition();
       cout << "You need to pay $" << curTuition << " tuition to " << owner->getName() << endl;
       while(curPlayer->getMoney() < curTuition) {
-        cout << "You don't have enough money! You only have " << curPlayer->getMoney() << endl;
+        cout << "You don't have enough money! You only have $" << curPlayer->getMoney() << endl;
         cout << "You need to raise money!";
         if (!parseAction()) return;
       }
@@ -356,7 +356,7 @@ void Gameplay::roll(int die1, int die2) {
         if (curTuition > 0) {
           cout << "You need to pay $" << curTuition << " to University of Waterloo." << endl;
           while(curPlayer->getMoney() < curTuition) {
-            cout << "You don't have enough money! You only have " << curPlayer->getMoney() << endl;
+            cout << "You don't have enough money! You only have $" << curPlayer->getMoney() << endl;
             cout << "You need to raise money!";
             if (!parseAction()) return;
           }
