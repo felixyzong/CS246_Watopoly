@@ -61,7 +61,6 @@ Gameplay::Gameplay(bool test, bool isLoad ,string load) {
     cout << "Finish loading" <<endl;
     b = new Board("square.in");
     b->init(players);
-    curPlayer = players[0];
     curBuilding = b->getBuilding(curPlayer->getPos());
     isTest = test;
     cout << b;
@@ -120,9 +119,9 @@ Gameplay::Gameplay(bool test, bool isLoad ,string load) {
 
 Gameplay::Gameplay(bool test, string load, string theme) {
   loadGame(load);
+  
   b = new Board(theme);
   b->init(players);
-  curPlayer = players[0];
   curBuilding = b->getBuilding(curPlayer->getPos());
   isTest = test;
   cout << b;
@@ -327,6 +326,8 @@ void Gameplay::roll(int die1, int die2) {
           // move to DC Tims Line
           moveNum = 50 - curPlayer->getPos();
           moveNum %= 40;
+          curPlayer->MovetoTimsLine();
+          cout << b;
         } else if (moveNum == 4) {
           // move to Collect OSAP
           moveNum = 40 - curPlayer->getPos();
@@ -373,6 +374,7 @@ void Gameplay::roll(int die1, int die2) {
             moveNum = 50 - curPlayer->getPos();
             moveNum %= 40;
             curPlayer->MovetoTimsLine();
+            cout << b;
           } else if (moveNum == 4) {
             // move to Collect OSAP
             moveNum = 40 - curPlayer->getPos();
@@ -813,6 +815,11 @@ void Gameplay::saveGame(string save_name){
       saving << endl;
     }
   }
+  saving << curPlayer->getName() << " ";
+  if (isRolled) {
+  saving << "yes";
+  } else saving << "no";
+  saving << endl;
   for (int i = 0; i < 40; i++) {
     Building *bs = b->getBuilding(i);
     if (bs->getBuildingType() == BuildingType::Nonproperty) continue;
@@ -830,7 +837,6 @@ void Gameplay::saveGame(string save_name){
         saving << static_cast<AcademicBuilding *>(bs)->getImprovement() << endl;
     }
   }
-
 }
 
 void Gameplay::loadGame(string file) {
@@ -847,6 +853,7 @@ void Gameplay::loadGame(string file) {
       Player *p = new Player(money, c);
       p->setPos(position);
       p->setCup(cups);
+      this->totalRimCup += cups;
       if (position == 10) {
         myfile >> dc;
         if (dc == 1) {
@@ -855,6 +862,16 @@ void Gameplay::loadGame(string file) {
         }
       }
       players.emplace_back(p);
+    }
+    char curPlayerName;
+    string isRolledSave;
+    myfile >> curPlayerName >> isRolledSave;
+    
+    curPlayer = findPlayer(curPlayerName);
+    if (isRolledSave == string("yes")) {
+      isRolled = true;
+    } else if (isRolledSave == string("no")) {
+      isRolled = false;
     }
     string bn;
     char own;
@@ -872,6 +889,7 @@ void Gameplay::loadGame(string file) {
       build->setMortgage();
     }
   }
+  
   myfile.close();
 }
 

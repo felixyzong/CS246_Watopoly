@@ -47,7 +47,6 @@ bool Player::incTimTurn() {
   if (TimLineTurn == 0) {
     TimLineTurn += 1;
     isInTimLine = true;
-    cout << "It's your " << TimLineTurn << "th turn at tims line." << endl;
     return true;
   }
   cout << "It's your " << TimLineTurn << "th turn at tims line." << endl;
@@ -87,6 +86,8 @@ bool Player::incTimTurn() {
 void Player::MovetoTimsLine() {
   TimLineTurn = 0;
   isInTimLine = true;
+  pos = 10;
+  notifyObservers();
 }
 void Player::OutfromTimsLine() {
   TimLineTurn = 0;
