@@ -314,12 +314,16 @@ bool Gameplay::parseAction() {
   string action;
   cin >> action;
   if (action == "roll") {
+    string s;
+    getline(cin, s);
+    stringstream ss{s};
     if (isRolled) {
       cout << "You have rolled!" << endl;
     } else if (isTest) {
       int dice1, dice2;
-      cin >> dice1 >> dice2;
-      roll(dice1, dice2);
+      ss >> dice1 >> dice2;
+      if (ss.eof()) roll();
+      else roll(dice1, dice2);
     } else {
       roll();
     }
