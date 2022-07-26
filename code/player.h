@@ -36,6 +36,8 @@ class Player : public Subject<PlayerInfo> {
   
   void gainCup();        // Increase the cup by 1
   bool incTimTurn();      // Increase the tim line turn
+  void MovetoTimsLine();
+  void OutfromTimsLine();
 
   void addProperty(Property *b);
   void removeProperty(Property *b);

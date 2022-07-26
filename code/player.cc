@@ -14,6 +14,9 @@ Player::Player(int money, char name): money{money}, name{name}, pos{0} {}
 Player::~Player() {
   pos = -1;
   notifyObservers();
+  for (Property* p : property) {
+    p->init();
+  }
 }
 
 char Player::getName() { return name; }
@@ -41,15 +44,21 @@ void Player::gainCup() {
 
 // return true if player cannot leave, return false if can leave
 bool Player::incTimTurn() {
+  if (TimLineTurn == 0) {
+    TimLineTurn += 1;
+    isInTimLine = true;
+    cout << "It's your " << TimLineTurn << "th turn at tims line." << endl;
+    return true;
+  }
+  cout << "It's your " << TimLineTurn << "th turn at tims line." << endl;
   if (cup > 0) {
     cup -= 1;
-    isInTimLine = false;
+    OutfromTimsLine();
     cout << "You leave tim line because you have a Roll up the Rim Cup!" << endl;
     return false;
   } else if (TimLineTurn == 3) {
-    TimLineTurn = 0;
-    isInTimLine = false;
-    cout << "You leave tim line because you have been here for 3 turn!" << endl;
+    OutfromTimsLine();
+    cout << "You leave tim line because you have been here for 3 turns!" << endl;
     return false;
   } else {
     cout << "Do you want to pay $50 to leave tim line? Please enter yes or no: ";
@@ -62,19 +71,26 @@ bool Player::incTimTurn() {
         }
         cout << "You leave tim line because you paid $50!" << endl;
         money -= 50;
-        TimLineTurn = 0;
-        isInTimLine = false;
+        OutfromTimsLine();
         return false;
       } else if (command == "no") break;
       else {
         cout << "Invalid command! Please enter yes or no: ";
       }
     }
-    TimLineTurn += 1;
-    isInTimLine = true;
-    cout << "It's your " << TimLineTurn << "th turn at tim line." << endl;
-    return true;
   }
+  TimLineTurn += 1;
+  isInTimLine = true;
+  return true;
+}
+
+void Player::MovetoTimsLine() {
+  TimLineTurn = 0;
+  isInTimLine = true;
+}
+void Player::OutfromTimsLine() {
+  TimLineTurn = 0;
+  isInTimLine = false;
 }
 
 
@@ -85,7 +101,6 @@ void Player::addProperty(Property *b) {
 
 void Player::removeProperty(Property *b) {
   property.erase(find(property.begin(), property.end(), b));
-  b->init();
 }
 
 

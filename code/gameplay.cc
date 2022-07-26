@@ -23,7 +23,7 @@ Gameplay::Gameplay(bool test) {
 
   // every player enter their avatar
   for (int i = 0; i < playerCount; ++i) {
-    cout << "Current available avatars: ";
+    cout << "Current available avatars:";
     for (char name : availablePlayers) {
       cout  << " " << name;
     }
@@ -125,7 +125,13 @@ void Gameplay::roll() {
 void Gameplay::roll(int die1, int die2) {
   // check is player is stuck in timsline
   if (curPlayer->isInTim()) {
-    if (!curPlayer->incTimTurn()) {
+    cout << "You are stucked in tims line!" << endl;
+    if (die1 == die2) {
+      cout << "You leave DC tims line because you rolled out two same number!" << endl;
+      curPlayer->OutfromTimsLine();
+      roll(die1, die2);
+    } else if (!curPlayer->incTimTurn()) {
+      curPlayer->OutfromTimsLine();
       roll(die1, die2);
     }
     isRolled = true;
@@ -133,7 +139,7 @@ void Gameplay::roll(int die1, int die2) {
   }
 
   // move and get curBuilding
-  if (curPlayer->getPos() + die1 + die2 >= 40) {
+  if (curPlayer->getPos() + die1 + die2 >= 40 && !curPlayer->isInTim()) {
     cout << "You passed Collect OSAP, you gain $200!" << endl;
     curPlayer->addFund(200);
   }
@@ -293,6 +299,7 @@ void Gameplay::roll(int die1, int die2) {
             // move to DC Tims Line
             moveNum = 50 - curPlayer->getPos();
             moveNum %= 40;
+            curPlayer->MovetoTimsLine();
           } else if (moveNum == 4) {
             // move to Collect OSAP
             moveNum = 40 - curPlayer->getPos();
@@ -320,10 +327,16 @@ bool Gameplay::parseAction() {
     if (isRolled) {
       cout << "You have rolled!" << endl;
     } else if (isTest) {
-      int dice1, dice2;
-      ss >> dice1 >> dice2;
+      int die1, die2;
       if (ss.eof()) roll();
-      else roll(dice1, dice2);
+      else {
+        ss >> die1;
+        if (ss.eof()) roll();
+        else {
+          ss >> die2;
+          roll(die1, die2);
+        }
+      }
     } else {
       roll();
     }

@@ -156,6 +156,7 @@ void AcademicBuilding::init() {
   monopolist = nullptr;
   improvement = 0;
   mtg = false;
+  notifyObservers();
 }
 
 
