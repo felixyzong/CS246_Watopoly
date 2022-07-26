@@ -451,6 +451,15 @@ void Gameplay::trade(char pn, string give, string receive) {
       return;
     }
     
+    if (receiveProp->getBuildingType() == BuildingType::Academic) {
+      AcademicBuilding *receiveAB = static_cast<AcademicBuilding*>(receiveProp);
+      if (receiveAB->getMonopolyImprovement() > 0) {
+        cout << bntostr(receiveAB->getBuildingName()) << "can't be traded! " << endl;
+        cout << tradePlayer->getName() << " need to sell all improvement in that monopoly block first!" << endl;
+        return;
+      }
+    }
+
     cout << "Player " << tradePlayer->getName() << ", please accept or reject the trade: ";
     string command;
     while (cin >> command) {
@@ -484,6 +493,15 @@ void Gameplay::trade(char pn, string give, string receive) {
     if (giveProp->getOwner() != curPlayer) {
       cout << bntostr(giveProp->getBuildingName()) << " is not owned by " << curPlayer->getName() << "!" << endl;
       return;
+    }
+
+    if (giveProp->getBuildingType() == BuildingType::Academic) {
+      AcademicBuilding *giveAB = static_cast<AcademicBuilding*>(giveProp);
+      if (giveAB->getMonopolyImprovement() > 0) {
+        cout << bntostr(giveAB->getBuildingName()) << "can't be traded! " << endl;
+        cout << "You need to sell all improvement in that monopoly block first!" << endl;
+        return;
+      }
     }
 
     if (isNumeric(receive)) {
@@ -525,6 +543,14 @@ void Gameplay::trade(char pn, string give, string receive) {
         cout << bntostr(receiveProp->getBuildingName()) << " is not owned by " << tradePlayer->getName() << "!" << endl;
         return;
       }
+      if (receiveProp->getBuildingType() == BuildingType::Academic) {
+        AcademicBuilding *receiveAB = static_cast<AcademicBuilding*>(receiveProp);
+        if (receiveAB->getMonopolyImprovement() > 0) {
+          cout << bntostr(receiveAB->getBuildingName()) << "can't be traded! " << endl;
+          cout << tradePlayer->getName() << " need to sell all improvement in that monopoly block first!" << endl;
+          return;
+        }
+    }
       cout << "Player " << tradePlayer->getName() << ", please accept or reject the trade: ";
       string command;
       while (cin >> command) {
