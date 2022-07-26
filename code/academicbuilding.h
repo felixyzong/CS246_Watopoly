@@ -13,7 +13,7 @@ class AcademicBuilding : public Property, public Observer<BuildingInfo>{
   Player* owner;
   MonopolyBlock mb;
   Player* monopolist;
-  std::map<BuildingName,Player*> monopoly;
+  std::vector<BuildingInfo> monopoly;
   int improvement;
   bool mtg;
   std::vector<int> info;
@@ -29,6 +29,9 @@ class AcademicBuilding : public Property, public Observer<BuildingInfo>{
   Player *getMonopolist() const;
   virtual int getWorth() override;
   virtual void setMortgage() override;
+
+  int find(BuildingName bn);
+  int getMonopolyImprovement();
 
   bool addImprovement() ;
   bool sellImprovement();

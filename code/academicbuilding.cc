@@ -74,14 +74,33 @@ BuildingInfo AcademicBuilding::getInfo() const {
   return bi;
 }
 
+int AcademicBuilding::find(BuildingName bn) {
+  for (int i = 0; i < monopoly.size(); i++) {
+    if (monopoly[i].bn == bn) return i;
+  }
+  return -1;
+}
+
+int AcademicBuilding::getMonopolyImprovement() {
+  if (monopolist) {
+    int imp = improvement;
+    for (BuildingInfo bi : monopoly) {
+      imp += bi.improvement;
+    }
+    return imp;
+  }
+  return 0;
+}
+
 void AcademicBuilding::notify(Subject<BuildingInfo> &whoFrom) {
   BuildingInfo bi = whoFrom.getInfo();
-  auto it = monopoly.find(bi.bn);
-  if (it == monopoly.end()) {
-    monopoly.insert(std::pair<BuildingName,Player*>(bi.bn,bi.owner));
+  int index = find(bi.bn);
+  if (index == -1) {
+    monopoly.emplace_back(bi);
     return;
   }
-  it->second = bi.owner;
+  monopoly[index].improvement = bi.improvement;
+  monopoly[index].owner = bi.owner;
   if (owner != nullptr) updateMonopolist();
 }
 
@@ -123,7 +142,7 @@ bool AcademicBuilding::unmortgage() {
 void AcademicBuilding::updateMonopolist() {
   bool monopolyStatus = true;
   for (auto it = monopoly.begin(); it!= monopoly.end(); ++it) {
-    if (it->second != owner) {
+    if (it->owner != owner) {
       monopolyStatus = false;
       monopolist = nullptr;
       break;
@@ -137,6 +156,7 @@ void AcademicBuilding::init() {
   monopolist = nullptr;
   improvement = 0;
   mtg = false;
+  notifyObservers();
 }
 
 

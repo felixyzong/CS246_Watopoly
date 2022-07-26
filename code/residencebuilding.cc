@@ -82,6 +82,7 @@ void ResidenceBuilding::init() {
   owner = nullptr;
   totalOwns = 0;
   mtg = false;
+  notifyObservers();
 }
 
 

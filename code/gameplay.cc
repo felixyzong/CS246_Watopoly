@@ -23,7 +23,7 @@ Gameplay::Gameplay(bool test) {
 
   // every player enter their avatar
   for (int i = 0; i < playerCount; ++i) {
-    cout << "Current available avatars: ";
+    cout << "Current available avatars:";
     for (char name : availablePlayers) {
       cout  << " " << name;
     }
@@ -198,7 +198,13 @@ void Gameplay::roll() {
 void Gameplay::roll(int die1, int die2) {
   // check is player is stuck in timsline
   if (curPlayer->isInTim()) {
-    if (!curPlayer->incTimTurn()) {
+    cout << "You are stucked in tims line!" << endl;
+    if (die1 == die2) {
+      cout << "You leave DC tims line because you rolled out two same number!" << endl;
+      curPlayer->OutfromTimsLine();
+      roll(die1, die2);
+    } else if (!curPlayer->incTimTurn()) {
+      curPlayer->OutfromTimsLine();
       roll(die1, die2);
     }
     isRolled = true;
@@ -206,7 +212,7 @@ void Gameplay::roll(int die1, int die2) {
   }
 
   // move and get curBuilding
-  if (curPlayer->getPos() + die1 + die2 >= 40) {
+  if (curPlayer->getPos() + die1 + die2 >= 40 && !curPlayer->isInTim()) {
     cout << "You passed Collect OSAP, you gain $200!" << endl;
     curPlayer->addFund(200);
   }
@@ -366,6 +372,7 @@ void Gameplay::roll(int die1, int die2) {
             // move to DC Tims Line
             moveNum = 50 - curPlayer->getPos();
             moveNum %= 40;
+            curPlayer->MovetoTimsLine();
           } else if (moveNum == 4) {
             // move to Collect OSAP
             moveNum = 40 - curPlayer->getPos();
@@ -387,12 +394,22 @@ bool Gameplay::parseAction() {
   string action;
   cin >> action;
   if (action == "roll") {
+    string s;
+    getline(cin, s);
+    stringstream ss{s};
     if (isRolled) {
       cout << "You have rolled!" << endl;
     } else if (isTest) {
-      int dice1, dice2;
-      cin >> dice1 >> dice2;
-      roll(dice1, dice2);
+      int die1, die2;
+      if (ss.eof()) roll();
+      else {
+        ss >> die1;
+        if (ss.eof()) roll();
+        else {
+          ss >> die2;
+          roll(die1, die2);
+        }
+      }
     } else {
       roll();
     }
@@ -524,6 +541,15 @@ void Gameplay::trade(char pn, string give, string receive) {
       return;
     }
     
+    if (receiveProp->getBuildingType() == BuildingType::Academic) {
+      AcademicBuilding *receiveAB = static_cast<AcademicBuilding*>(receiveProp);
+      if (receiveAB->getMonopolyImprovement() > 0) {
+        cout << bntostr(receiveAB->getBuildingName()) << "can't be traded! " << endl;
+        cout << tradePlayer->getName() << " need to sell all improvement in that monopoly block first!" << endl;
+        return;
+      }
+    }
+
     cout << "Player " << tradePlayer->getName() << ", please accept or reject the trade: ";
     string command;
     while (cin >> command) {
@@ -557,6 +583,15 @@ void Gameplay::trade(char pn, string give, string receive) {
     if (giveProp->getOwner() != curPlayer) {
       cout << bntostr(giveProp->getBuildingName()) << " is not owned by " << curPlayer->getName() << "!" << endl;
       return;
+    }
+
+    if (giveProp->getBuildingType() == BuildingType::Academic) {
+      AcademicBuilding *giveAB = static_cast<AcademicBuilding*>(giveProp);
+      if (giveAB->getMonopolyImprovement() > 0) {
+        cout << bntostr(giveAB->getBuildingName()) << "can't be traded! " << endl;
+        cout << "You need to sell all improvement in that monopoly block first!" << endl;
+        return;
+      }
     }
 
     if (isNumeric(receive)) {
@@ -598,6 +633,14 @@ void Gameplay::trade(char pn, string give, string receive) {
         cout << bntostr(receiveProp->getBuildingName()) << " is not owned by " << tradePlayer->getName() << "!" << endl;
         return;
       }
+      if (receiveProp->getBuildingType() == BuildingType::Academic) {
+        AcademicBuilding *receiveAB = static_cast<AcademicBuilding*>(receiveProp);
+        if (receiveAB->getMonopolyImprovement() > 0) {
+          cout << bntostr(receiveAB->getBuildingName()) << "can't be traded! " << endl;
+          cout << tradePlayer->getName() << " need to sell all improvement in that monopoly block first!" << endl;
+          return;
+        }
+    }
       cout << "Player " << tradePlayer->getName() << ", please accept or reject the trade: ";
       string command;
       while (cin >> command) {
@@ -790,8 +833,6 @@ void Gameplay::saveGame(string save_name){
 
 }
 
-
-
 void Gameplay::loadGame(string file) {
   ifstream myfile(file);
   int cnt;
@@ -833,6 +874,5 @@ void Gameplay::loadGame(string file) {
   }
   myfile.close();
 }
-
 
 
