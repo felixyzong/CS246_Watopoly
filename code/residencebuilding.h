@@ -25,7 +25,8 @@ class ResidenceBuilding : public Property, public Observer<BuildingInfo>{
   virtual int getWorth() override;
   virtual bool mortgage() override;
   virtual bool unmortgage() override;
- 
+  virtual void setMortgage() override;
+
   virtual int tuition() const override;           // inherit from building
   virtual int movement() const override;          // inherit from building
   virtual BuildingInfo getInfo() const override;  // inherit from subject

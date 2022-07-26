@@ -19,6 +19,7 @@ public:
   virtual int getWorth() = 0;
   virtual bool mortgage() = 0;
   virtual bool unmortgage() = 0;
+  virtual void setMortgage() = 0;
   virtual BuildingInfo getInfo() const = 0; // inherit from Subject<Info>
   virtual void init() = 0;
   virtual ~Property() = 0;

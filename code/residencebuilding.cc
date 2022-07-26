@@ -84,3 +84,7 @@ void ResidenceBuilding::init() {
   mtg = false;
 }
 
+
+void ResidenceBuilding::setMortgage() {
+  mtg = true;
+}

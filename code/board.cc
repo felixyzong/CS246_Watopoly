@@ -272,9 +272,6 @@ void Board::compilePlayers() {
 
 void Board::notify(Subject<PlayerInfo> &whoFrom) {
   PlayerInfo pi = whoFrom.getInfo();
-
-  auto it = playerPos.find(pi.name);
-
   if (pi.pos == -1) {
     playerPos.erase(pi.name);
     return;
@@ -283,8 +280,7 @@ void Board::notify(Subject<PlayerInfo> &whoFrom) {
 }
 
 
-void Board::notify(Subject<BuildingInfo> &whoFrom) {
-}
+void Board::notify(Subject<BuildingInfo> &whoFrom) {}
 
 Board::~Board() noexcept {
   for (Building * b : buildings) {

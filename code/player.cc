@@ -28,7 +28,7 @@ int Player::getTotalWorth() {
   for (auto it : property) {
     totalWorth += it->getWorth();
   }
-  return totalWorth;
+  return totalWorth + money;
 }
 
 void Player::addFund(int num) {
@@ -181,3 +181,11 @@ PlayerInfo Player::getInfo() const {
 }
 
 
+void Player::setCup(int n) {
+  cup = n;
+}
+
+void Player::setTimTurn(int n) {
+  isInTimLine = true;
+  TimLineTurn = n;
+}

@@ -90,3 +90,7 @@ void GymsBuilding::init() {
   mtg = false;
 }
 
+
+void GymsBuilding::setMortgage() {
+  mtg = true;
+}

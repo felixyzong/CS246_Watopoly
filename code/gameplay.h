@@ -30,6 +30,7 @@ class Gameplay {
   bool isRolled = false;
   bool isTest;
   int totalRimCup = 0;
+  std::string theme = "square.in";
 
 
   friend class Player;
@@ -56,6 +57,8 @@ class Gameplay {
   void loadGame(std::string file);
  public:
   Gameplay(bool test);
+  Gameplay(bool test, bool isLoad, std::string load);
+  Gameplay(bool test, std::string load, std::string theme);
   void play();
   ~Gameplay();
 };

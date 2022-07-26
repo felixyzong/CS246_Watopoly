@@ -147,3 +147,11 @@ Player * AcademicBuilding::getMonopolist() const {
 int AcademicBuilding::getImprovement() const{
   return improvement;
 }
+
+void AcademicBuilding::setImprovement(int i) {
+  this->improvement = i;
+}
+
+void AcademicBuilding::setMortgage() {
+  mtg = true;
+}

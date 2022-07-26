@@ -28,9 +28,11 @@ class AcademicBuilding : public Property, public Observer<BuildingInfo>{
   virtual bool getMortgage() override;
   Player *getMonopolist() const;
   virtual int getWorth() override;
+  virtual void setMortgage() override;
 
   bool addImprovement() ;
   bool sellImprovement();
+  void setImprovement(int i);
   int getImprovement() const;
 
   virtual int tuition() const override;           // inherit from building

@@ -47,10 +47,83 @@ Gameplay::Gameplay(bool test) {
   }
 
   // buildings initialize
-  b = new Board("snake.in");
+  b = new Board("square.in");
   b->init(players);
   curBuilding = b->getBuilding(0);
   curPlayer = players[0];
+  isTest = test;
+  cout << b;
+}
+
+Gameplay::Gameplay(bool test, bool isLoad ,string load) {
+  if (isLoad) {
+    loadGame(load);
+    cout << "Finish loading" <<endl;
+    b = new Board("square.in");
+    b->init(players);
+    curPlayer = players[0];
+    curBuilding = b->getBuilding(curPlayer->getPos());
+    isTest = test;
+    cout << b;
+  } else {
+    std::vector<char> availablePlayers = {'G','B','D','P','S','$','L','T'};
+    const int defaultMoney = 1500;
+    int playerCount;
+    char playerChar;
+    cout << "Please enter the number of players(at lease 2, at most 8): ";
+    cin >> playerCount;
+    while (playerCount < 2 || playerCount > 8) {
+      cout << "Invalid number of players." << endl;
+      cout << "Please enter the number of players(at lease 2, at most 8): ";
+      cin >> playerCount;
+    }
+
+    // display a list of avatas for choosing
+    cout << "Please choose your avatar from the following:" << endl;
+    cout << "| Goose | GRT bus | Tim Hortons Doughnut | Professor | Student | Money | Laptop | Pink tie |" << endl;
+    cout << "|   G   |    B    |           D          |     P     |    S    |   $   |   L    |    T     |" << endl;
+
+    // every player enter their avatar
+    for (int i = 0; i < playerCount; ++i) {
+      cout << "Current available avatars: ";
+      for (char name : availablePlayers) {
+        cout  << " " << name;
+      }
+      cout << endl;
+      cout << "Player #" << i+1 << ", please enter your avator char: ";
+      cin >> playerChar;
+      while (find(availablePlayers.begin(), availablePlayers.end(), playerChar) == availablePlayers.end())
+      {
+        cout << "Invalid avatar char, please choose from available!" << endl;
+        cout << "Current available avatars:";
+        for (char name : availablePlayers) {
+          cout  << " " << name;
+        }
+        cout << endl;
+        cout << "Player #" << i << ", please enter your avator char: ";
+        cin >> playerChar;
+      }
+
+      availablePlayers.erase(find(availablePlayers.begin(), availablePlayers.end(), playerChar));
+      players.push_back(new Player(defaultMoney, playerChar));
+    }
+
+    // buildings initialize
+    b = new Board(load);
+    b->init(players);
+    curBuilding = b->getBuilding(0);
+    curPlayer = players[0];
+    isTest = test;
+    cout << b;
+  }
+}
+
+Gameplay::Gameplay(bool test, string load, string theme) {
+  loadGame(load);
+  b = new Board(theme);
+  b->init(players);
+  curPlayer = players[0];
+  curBuilding = b->getBuilding(curPlayer->getPos());
   isTest = test;
   cout << b;
 }
@@ -488,7 +561,7 @@ void Gameplay::trade(char pn, string give, string receive) {
 
     if (isNumeric(receive)) {
       int receiveMoney = stoi(receive);
-      if (receiveMoney < tradePlayer->getMoney()) {
+      if (receiveMoney > tradePlayer->getMoney()) {
         cout << tradePlayer->getName() << " don't have enough money!" << endl;
         return;
       }
@@ -688,7 +761,7 @@ void Gameplay::saveGame(string save_name){
   saving.open(save_name + ".txt");
   saving << players.size() << endl;
   for (Player * p : players) {
-    saving << "Player " << p->getName() << " " << p->getTimCups() << " " << p->getTotalWorth() << " " << p->getPos();
+    saving << "Player " << p->getName() << " " << p->getTimCups() << " " << p->getMoney() << " " << p->getPos();
     if (p->getPos() == 10 && p->isInTim()) {
       saving << " "  << 1 << " " << p->getTimTurn() << endl;
     } else if (p->getPos() == 10) {
@@ -720,7 +793,45 @@ void Gameplay::saveGame(string save_name){
 
 
 void Gameplay::loadGame(string file) {
-
+  ifstream myfile(file);
+  int cnt;
+  if (myfile.is_open()) {
+    myfile >> cnt;
+    // initialize player
+    for (int i = 0; i < cnt; ++i) {
+      string pl;
+      char c;
+      int cups, money, position, dc, round;
+      myfile >> pl >> c >> cups >> money >> position;
+      Player *p = new Player(money, c);
+      p->setPos(position);
+      p->setCup(cups);
+      if (position == 10) {
+        myfile >> dc;
+        if (dc == 1) {
+          myfile >> round;
+          p->setTimTurn(round);
+        }
+      }
+      players.emplace_back(p);
+    }
+    string bn;
+    char own;
+    int imp;
+    Property *build;
+    while (myfile >> bn >> own >> imp) {
+       build = static_cast<Property *>(b->findBuilding(bn));
+      for (Player *p : players) {
+        if (p->getName() == own) build->setOwner(p);
+      }
+    }
+    if (imp  > 0) {
+      static_cast<AcademicBuilding *>(build)->setImprovement(imp);
+    } else if (imp == -1) {
+      build->setMortgage();
+    }
+  }
+  myfile.close();
 }
 
 

@@ -24,7 +24,7 @@ class GymsBuilding : public Property, public Observer<BuildingInfo>{
   virtual int getWorth() override;
   virtual bool mortgage() override;
   virtual bool unmortgage() override;
-
+  virtual void setMortgage() override;
   // call enterLastRoll before call tuition() of a gym building
   void enterLastRoll(int lastRoll);
 
