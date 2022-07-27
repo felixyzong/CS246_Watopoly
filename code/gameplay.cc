@@ -471,6 +471,9 @@ bool Gameplay::parseAction() {
     cin >> save_name;
     saveGame(save_name);
       
+  } else if (action == "quit") {
+    running = false;
+
   } else if (action == "help") {
     cout << "Available command list:" << endl;
 
@@ -797,10 +800,14 @@ void Gameplay::all() {
 
 void Gameplay::play() {
   while (true) {
-    if (players.size() == 1) break;
+    if (players.size() == 1) {
+      cout << curPlayer->getName() << " is the winner of the game!" << endl;
+      break;
+    }
+    else if (running == false) break;
     else parseAction();
   }
-  cout << curPlayer->getName() << " is the winner of the game!" << endl;
+  
 }
 
 

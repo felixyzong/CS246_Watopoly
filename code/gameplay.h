@@ -30,6 +30,7 @@ class Gameplay {
   bool isRolled = false;
   bool isTest;
   int totalRimCup = 0;
+  bool running = true;
   std::string theme = "square.in";
 
 
