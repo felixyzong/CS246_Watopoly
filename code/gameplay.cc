@@ -612,7 +612,7 @@ void Gameplay::trade(char pn, string give, string receive) {
           curPlayer->removeProperty(giveProp);
           curPlayer->addFund(receiveMoney);
           tradePlayer->addProperty(giveProp);
-          tradePlayer->addFund(receiveMoney);
+          tradePlayer->addFund(-receiveMoney);
           giveProp->setOwner(tradePlayer);
           break;
         } else if (command == "reject") {
